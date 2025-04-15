@@ -13,6 +13,33 @@
   </style>
 </head>
 <body>
+
+<h2>Dialogue complet – Au supermarché</h2>
+<div style="background:#f9f9f9; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px;">
+  <p><strong>Client :</strong> Bonjour, où sont les tomates, s’il vous plaît ?</p>
+  <p><strong>Employé :</strong> Elles sont dans le rayon fruits et légumes, juste à côté des pommes de terre.</p>
+  <p><strong>Client :</strong> Merci. Je vais en prendre un kilo.</p>
+  <p><strong>Employé :</strong> Vous voulez autre chose ?</p>
+  <p><strong>Client :</strong> Oui, avez-vous du lait ?</p>
+  <p><strong>Employé :</strong> Oui, il est dans le rayon des produits frais, près du fromage.</p>
+  <p><strong>Client :</strong> Parfait, je vais aussi prendre un morceau de beurre.</p>
+  <p><strong>Employé :</strong> Bonne journée à vous !</p>
+  <p><strong>Client :</strong> Merci, à vous aussi !</p>
+</div>
+
+<h3>Перевод диалога на русский</h3>
+<div style="background:#f3f3f3; padding: 10px; border: 1px solid #ccc; margin-bottom: 30px;">
+  <p><strong>Покупатель:</strong> Здравствуйте, где находятся помидоры, пожалуйста?</p>
+  <p><strong>Сотрудник:</strong> Они в отделе фруктов и овощей, рядом с картошкой.</p>
+  <p><strong>Покупатель:</strong> Спасибо. Я возьму килограмм.</p>
+  <p><strong>Сотрудник:</strong> Хотите что-нибудь ещё?</p>
+  <p><strong>Покупатель:</strong> Да, у вас есть молоко?</p>
+  <p><strong>Сотрудник:</strong> Да, оно в отделе с молочными продуктами, рядом с сыром.</p>
+  <p><strong>Покупатель:</strong> Отлично, я ещё возьму кусочек масла.</p>
+  <p><strong>Сотрудник:</strong> Хорошего вам дня!</p>
+  <p><strong>Покупатель:</strong> Спасибо, вам тоже!</p>
+</div>
+
 <h2>Dialogue : Au supermarché — exercice à trous avec audio</h2>
 <p>Complétez les mots manquants dans ce dialogue. Cliquez sur 🔊 pour écouter chaque ligne.</p>
 
@@ -48,8 +75,16 @@ const dialogue = [
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const frenchVoice = voices.find(voice => voice.lang === 'fr-FR');
+  if (frenchVoice) {
+    utterance.voice = frenchVoice;
+  }
   speechSynthesis.speak(utterance);
 }
+
+// Pour s’assurer que les voix sont bien chargées
+speechSynthesis.onvoiceschanged = () => {};
 
 function createDialogue() {
   const container = document.getElementById("dialogue-container");
@@ -63,7 +98,7 @@ function createDialogue() {
       inputField = `<input type='text' id='${qId}' placeholder='...'>`;
     }
     const displayLine = line.replace("___", inputField);
-    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak(\"${line.replace('___', answer)}\")">🔊</button>
+    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak('${line.replace('___', answer)}')">🔊</button>
     <div id='exp${i + 1}' class='explanation'>✅ ${line.replace('___', answer)}</div></div>`;
     container.innerHTML += html;
   }
@@ -132,5 +167,6 @@ window.onload = createDialogue;
   <a href="../a1_dialogues.html">← Retour aux dialogues</a> |
   <a href="../../index.html">🏠 Accueil</a>
 </p>
+
 </body>
 </html>
