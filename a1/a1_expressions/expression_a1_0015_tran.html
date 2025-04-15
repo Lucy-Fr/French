@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeu : Devine le bon équivalent (partie 2)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .wrong { background-color: #f8d7da; }
+    .choices label { display: block; margin-bottom: 4px; }
+    .result { font-weight: bold; margin-top: 5px; }
+  </style>
+</head>
+<body>
+<h2>🎯 Игра: Угадай французское выражение (Часть 2)</h2>
+<p>Выбери правильный перевод французского выражения для каждого русского варианта.</p>
+
+<form id="quizForm"></form>
+
+<button onclick="checkQuiz()">Проверить</button>
+<p id="finalScore"></p>
+
+<p>
+  <a href="../a1_expressions.html">← Назад к выражениям</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+<script>
+const expressions = [
+  ["Пойдём?", "On y va ?"],
+  ["Мы уходим.", "On s’en va."],
+  ["Мы на месте.", "On y est."],
+  ["Я понял.", "J’y suis."],
+  ["Ты идёшь?", "Tu y vas ?"],
+  ["Мне подходит.", "Ça me va."],
+  ["Мне не подходит.", "Ça ne me va pas."],
+  ["Хочешь?", "Ça te dit ?"],
+  ["Мне не хочется.", "Ça me dit rien."],
+  ["Для меня это важно.", "J’y tiens."],
+  ["Неплохо.", "C’est pas mal."],
+  ["Это отстой.", "C’est nul."],
+  ["Это супер.", "C’est top."],
+  ["Такое себе.", "C’est bof."],
+  ["Это безумие.", "C’est dingue."],
+  ["С ума сойти.", "C’est fou."],
+  ["Это жесть.", "C’est ouf."],
+  ["Это гениально.", "C’est génial."],
+  ["Жаль.", "C’est dommage."],
+  ["Это очень круто.", "C’est trop bien."],
+  ["Ты видел?", "T’as vu ?"],
+  ["Ты крут.", "Tu gères."],
+  ["Молодец!", "Chapeau !"],
+  ["Отлично сделано.", "Bien joué."],
+  ["Хорошая работа.", "Bon boulot."],
+  ["Так держать.", "Continue comme ça."],
+  ["Смелее!", "Courage !"],
+  ["Удачи!", "Bonne chance !"],
+  ["Держу кулачки.", "Je croise les doigts."],
+  ["Я горжусь тобой.", "Je suis fier/fière de toi."],
+  ["У меня нет...", "Il me manque…"],
+  ["Я не получил(а)...", "Je n’ai pas reçu…"],
+  ["Я хотел(а) бы узнать...", "Je voudrais savoir…"],
+  ["Я должен(на) сделать это онлайн.", "Je dois le faire en ligne."],
+  ["Я этим займусь.", "Je m’en occupe."],
+  ["Я уточню.", "Je vais vérifier."],
+  ["Я не могу получить доступ.", "Je n’arrive pas à accéder."],
+  ["Спасибо за ожидание.", "Merci de patienter."],
+  ["Это срочно.", "C’est urgent."],
+  ["Это непонятно.", "Ce n’est pas clair."],
+  ["Вы следующий.", "Vous êtes le suivant."],
+  ["Возьмите талончик.", "Prenez un ticket."],
+  ["Предъявите удостоверение личности.", "Présentez votre pièce d’identité."],
+  ["Всё занято.", "C’est complet."],
+  ["Нужно записаться.", "Il faut un rendez-vous."],
+  ["У вас есть подтверждающий документ?", "Vous avez un justificatif ?"],
+  ["Я здесь, чтобы...", "Je suis ici pour…"],
+  ["Ваш запрос в обработке.", "Votre demande est en cours."],
+  ["Уходим?", "On s’arrache ?"],
+  ["Я чуть не забыл(а).", "J’ai failli oublier."]
+];
+
+function getRandomChoices(correct, all, n = 3) {
+  const choices = [correct];
+  while (choices.length < n + 1) {
+    const r = all[Math.floor(Math.random() * all.length)][1];
+    if (!choices.includes(r)) choices.push(r);
+  }
+  return choices.sort(() => Math.random() - 0.5);
+}
+
+function createQuiz() {
+  const form = document.getElementById("quizForm");
+  expressions.forEach((pair, i) => {
+    const [ru, fr] = pair;
+    const choices = getRandomChoices(fr, expressions);
+    const q = document.createElement("div");
+    q.className = "question";
+    q.innerHTML = `<strong>${i + 1}. ${ru}</strong><div class="choices">` +
+      choices.map(c =>
+        `<label><input type="radio" name="q${i}" value="${c}"> ${c}</label>`
+      ).join("") +
+      `</div><div class="result" id="result${i}"></div>`;
+    form.appendChild(q);
+  });
+}
+
+function checkQuiz() {
+  let score = 0;
+  expressions.forEach((pair, i) => {
+    const correct = pair[1];
+    const radios = document.getElementsByName("q" + i);
+    let selected = null;
+    for (const r of radios) {
+      if (r.checked) selected = r.value;
+    }
+    const result = document.getElementById("result" + i);
+    result.innerText = `Правильный ответ: ${correct}`;
+    if (selected === correct) {
+      result.className = "result correct";
+      score++;
+    } else {
+      result.className = "result wrong";
+    }
+  });
+  document.getElementById("finalScore").innerText = `🔎 Результат: ${score} из 50 верных ответов.`;
+}
+
+createQuiz();
+</script>
+</body>
+</html>
