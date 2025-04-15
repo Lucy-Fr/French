@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Présent ou passé composé ? (Entrée libre)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Présent ou passé composé ? (Entrée libre)</h2>
+<p>Écrivez la bonne forme du verbe (au présent ou au passé composé).</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ à Paris ce week-end. (aller)", "suis allé", "Я ездил в Париж на этих выходных."],
+  ["Tu ___ souvent des romans ? (lire)", "lis", "Ты часто читаешь романы?"],
+  ["Il ___ déjà son café. (boire)", "a bu", "Он уже выпил свой кофе."],
+  ["Elle ___ toujours la vérité. (dire)", "dit", "Она всегда говорит правду."],
+  ["Nous ___ au musée samedi. (aller)", "sommes allés", "Мы ходили в музей в субботу."],
+  ["Vous ___ souvent ce plat ? (cuisiner)", "cuisinez", "Вы часто готовите это блюдо?"],
+  ["Ils ___ très tard hier soir. (rentrer)", "sont rentrés", "Они вернулись очень поздно вчера вечером."],
+  ["Elles ___ à la piscine maintenant. (être)", "sont", "Они сейчас в бассейне."],
+  ["Je ___ mon frère ce matin. (voir)", "ai vu", "Я видел своего брата сегодня утром."],
+  ["Tu ___ à la question ? (répondre)", "réponds", "Ты отвечаешь на вопрос?"],
+  ["Il ___ en retard. (arriver)", "est arrivé", "Он пришёл с опозданием."],
+  ["Elle ___ toujours souriante. (être)", "est", "Она всегда улыбается."],
+  ["Nous ___ un très bon dîner. (préparer)", "avons préparé", "Мы приготовили очень хороший ужин."],
+  ["Vous ___ déjà le film ? (voir)", "avez vu", "Вы уже посмотрели фильм?"],
+  ["Ils ___ bien ce matin. (travailler)", "travaillent", "Они хорошо работают этим утром."],
+  ["Elles ___ leurs devoirs hier. (faire)", "ont fait", "Они сделали своё домашнее задание вчера."],
+  ["Je ___ souvent à la bibliothèque. (aller)", "vais", "Я часто хожу в библиотеку."],
+  ["Tu ___ de la musique tous les jours. (écouter)", "écoutes", "Ты слушаешь музыку каждый день."],
+  ["Il ___ la porte. (ouvrir)", "a ouvert", "Он открыл дверь."],
+  ["Elle ___ une belle robe aujourd’hui. (porter)", "porte", "Она носит красивое платье сегодня."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" placeholder="Votre réponse..." />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

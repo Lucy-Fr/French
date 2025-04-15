@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Passé composé — Accord du participe passé avec être</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .hint { font-style: italic; color: #888; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Passé composé — Accord du participe passé avec être</h2>
+<p>Choisissez la bonne forme du participe passé en accord avec le sujet (féminin / pluriel).</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Marie est ___ à 9 heures.", "arrivée", "Она пришла в 9 часов.", "👩 Féminin singulier"],
+  ["Les garçons sont ___ rapidement.", "partis", "Мальчики быстро ушли.", "👨👨 Masculin pluriel"],
+  ["Nous sommes ___ à la maison (groupe de filles).", "restées", "Мы остались дома.", "👩👩 Féminin pluriel"],
+  ["Je suis ___ à l’école. (un garçon)", "allé", "Я пошёл в школу.", "👨 Masculin singulier"],
+  ["Elles sont ___ à la gare.", "arrivées", "Они прибыли на вокзал.", "👩👩 Féminin pluriel"],
+  ["Tu es ___ à temps. (une fille)", "venue", "Ты пришла вовремя.", "👩 Féminin singulier"],
+  ["Paul est ___ au bureau.", "rentré", "Поль вернулся в офис.", "👨 Masculin singulier"],
+  ["Mes amis sont ___ en retard.", "arrivés", "Мои друзья опоздали.", "👨👨 Masculin pluriel"],
+  ["Nous sommes ___ ensemble. (mixtes)", "venus", "Мы пришли вместе.", "👩👨 Mixte pluriel"],
+  ["Claire et Julie sont ___ au musée.", "allées", "Клер и Жюли пошли в музей.", "👩👩 Féminin pluriel"],
+  ["Je suis ___ à Paris. (une fille)", "née", "Я родилась в Париже.", "👩 Féminin singulier"],
+  ["Les enfants sont ___ dans la cour.", "descendus", "Дети спустились во двор.", "👦👧 Pluriel mixte"],
+  ["Tu es ___ ce matin. (un garçon)", "parti", "Ты ушёл этим утром.", "👨 Masculin singulier"],
+  ["Nous sommes ___ dans la montagne (deux filles).", "montées", "Мы поднялись в горы.", "👩👩 Féminin pluriel"],
+  ["Ils sont ___ tard le soir.", "rentrés", "Они вернулись поздно вечером.", "👨👨 Masculin pluriel"]
+];
+
+const options = [
+  "allé", "allée", "allés", "allées",
+  "arrivé", "arrivée", "arrivés", "arrivées",
+  "venu", "venue", "venus", "venues",
+  "parti", "partie", "partis", "parties",
+  "rentré", "rentrée", "rentrés", "rentrées",
+  "resté", "restée", "restés", "restées",
+  "monté", "montée", "montés", "montées",
+  "descendu", "descendue", "descendus", "descendues",
+  "né", "née"
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation, hint] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}<br><span class="hint">${hint}</span></p>`;
+    html += `<select id="${qId}"><option value="">-- choisissez --</option>`;
+    for (const opt of options) {
+      html += `<option value="${opt}">${opt}</option>`;
+    }
+    html += `</select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Présent ou passé composé ?</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Présent ou passé composé ?</h2>
+<p>Choisissez la bonne forme du verbe (présent ou passé composé).</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ au travail à 8 heures.", "vais", "Я иду на работу в 8 часов."],
+  ["Tu ___ une belle chanson hier.", "as chanté", "Ты спел красивую песню вчера."],
+  ["Il ___ ses devoirs maintenant.", "fait", "Он делает свою домашнюю работу сейчас."],
+  ["Nous ___ un film la semaine dernière.", "avons regardé", "Мы посмотрели фильм на прошлой неделе."],
+  ["Vous ___ souvent de la musique ?", "écoutez", "Вы часто слушаете музыку?"],
+  ["Elles ___ arrivées à midi.", "sont", "Они прибыли в полдень."],
+  ["Je ___ en vacances ce mois-ci.", "suis", "Я в отпуске в этом месяце."],
+  ["Tu ___ à la maison ce soir ?", "restes", "Ты остаёшься дома сегодня вечером?"],
+  ["Il ___ rentré à minuit hier.", "est", "Он вернулся вчера в полночь."],
+  ["Nous ___ au musée samedi dernier.", "sommes allés", "Мы ходили в музей в прошлую субботу."],
+  ["Vous ___ la vérité ?", "dites", "Вы говорите правду?"],
+  ["Ils ___ déjà leurs devoirs.", "ont fini", "Они уже сделали своё домашнее задание."],
+  ["Elles ___ très bien en français.", "parlent", "Они хорошо говорят по-французски."],
+  ["Je ___ ce livre maintenant.", "lis", "Я читаю эту книгу сейчас."],
+  ["Tu ___ allé à Lyon hier ?", "es", "Ты ездил в Лион вчера?"],
+];
+
+const options = [
+  "vais", "vas", "va", "allons", "allez", "vont",
+  "ai chanté", "as chanté", "a chanté", "avons chanté", "avez chanté", "ont chanté",
+  "fais", "fait", "faites", "font",
+  "avons regardé", "avez regardé", "ont regardé",
+  "écoute", "écoutes", "écoute", "écoutons", "écoutez", "écoutent",
+  "suis", "es", "est", "sommes", "êtes", "sont",
+  "reste", "restes", "reste", "restons", "restez", "restent",
+  "sommes allés", "êtes allés", "sont allés",
+  "dis", "disons", "dites", "dit",
+  "ont fini", "fini",
+  "parlent", "parlez", "parlons", "parle",
+  "lis", "lit", "lisez", "lisons"
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<select id="${qId}"><option value="">-- choisissez --</option>`;
+    for (const opt of options) {
+      html += `<option value="${opt}">${opt}</option>`;
+    }
+    html += `</select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
