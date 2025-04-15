@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes — Série 9</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    table { border-collapse: collapse; margin-bottom: 30px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    .reg { font-style: italic; color: gray; }
+    .question { margin-bottom: 25px; }
+    select, input[type="text"] { padding: 6px; margin-top: 5px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 9</h2>
+<p>Voici 10 nouvelles expressions avec traduction, explication grammaticale et registre :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Грамматика</th><th>Регистр</th></tr>
+  <tr><td>Je m’en doute</td><td>Я так и думал(а)</td><td>Глагол «s’en douter»</td><td class="reg">разг.</td></tr>
+  <tr><td>Je m’en occupe</td><td>Я этим займусь</td><td>Глагол «s’occuper de»</td><td class="reg">нейтр.</td></tr>
+  <tr><td>Je suis preneur / preneuse</td><td>Я за! / Мне подходит</td><td>Фраза с être + adjectif nominal</td><td class="reg">нейтр.</td></tr>
+  <tr><td>C’est du jamais vu</td><td>Такого ещё не было</td><td>Выражение с «jamais vu»</td><td class="reg">разг.</td></tr>
+  <tr><td>Tu m’en diras des nouvelles</td><td>Потом скажешь спасибо / сам удивишься</td><td>Фразеологизм</td><td class="reg">разг.</td></tr>
+  <tr><td>Ça se tente</td><td>Стоит попробовать</td><td>Безличное выражение (ça + se + verbe)</td><td class="reg">разг.</td></tr>
+  <tr><td>J’ai failli oublier</td><td>Я чуть не забыл</td><td>Глагол «faillir» + инфинитив</td><td class="reg">нейтр.</td></tr>
+  <tr><td>Tu tombes bien</td><td>Как раз вовремя</td><td>Фраза с «tomber»</td><td class="reg">разг.</td></tr>
+  <tr><td>C’est pas faux</td><td>Ну, в этом что-то есть</td><td>Отрицание с être</td><td class="reg">разг.</td></tr>
+  <tr><td>C’est pas gagné</td><td>Это ещё не точно / Всё сложно</td><td>Фраза с gagner (ирон.)</td><td class="reg">разг.</td></tr>
+</table>
+
+<h3>🧩 Exercice 1 — Choisissez l'expression correcte</h3>
+<p>Complétez chaque phrase. Cliquez sur 🔊 pour écouter.</p>
+<div id="dropdown-ex"></div>
+<p id="score1"></p>
+
+<h3>✍️ Exercice 2 — Écrivez l'expression correcte</h3>
+<p>Écrivez la bonne expression sans aide.</p>
+<div id="input-ex"></div>
+<p id="score2"></p>
+
+<button onclick="checkDropdown(); checkInput();">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "Je m’en doute", "Je m’en occupe", "Je suis preneur", "C’est du jamais vu",
+  "Tu m’en diras des nouvelles", "Ça se tente", "J’ai failli oublier", "Tu tombes bien",
+  "C’est pas faux", "C’est pas gagné"
+];
+
+const dialogues = [
+  {
+    full: "— Il a encore tout mélangé ? — Je m’en doute.",
+    withGap: "— Il a encore tout mélangé ? — ___",
+    answer: "Je m’en doute"
+  },
+  {
+    full: "— Qui envoie le mail ? — Je m’en occupe.",
+    withGap: "— Qui envoie le mail ? — ___",
+    answer: "Je m’en occupe"
+  },
+  {
+    full: "— On va au restau ? — Je suis preneur !",
+    withGap: "— On va au restau ? — ___ !",
+    answer: "Je suis preneur"
+  },
+  {
+    full: "— Ils ont fini en 2 heures ! — C’est du jamais vu.",
+    withGap: "— Ils ont fini en 2 heures ! — ___",
+    answer: "C’est du jamais vu"
+  },
+  {
+    full: "— Essaie ce gâteau, tu m’en diras des nouvelles !",
+    withGap: "— Essaie ce gâteau, ___ !",
+    answer: "tu m’en diras des nouvelles"
+  },
+  {
+    full: "— Tu crois que ça peut marcher ? — Ça se tente.",
+    withGap: "— Tu crois que ça peut marcher ? — ___",
+    answer: "Ça se tente"
+  },
+  {
+    full: "— Tu devais appeler ta mère ! — J’ai failli oublier.",
+    withGap: "— Tu devais appeler ta mère ! — ___",
+    answer: "J’ai failli oublier"
+  },
+  {
+    full: "— Je venais justement te voir. — Tu tombes bien.",
+    withGap: "— Je venais justement te voir. — ___",
+    answer: "Tu tombes bien"
+  },
+  {
+    full: "— Il a pas tout à fait tort… — C’est pas faux.",
+    withGap: "— Il a pas tout à fait tort… — ___",
+    answer: "C’est pas faux"
+  },
+  {
+    full: "— On va devoir tout recommencer… — C’est pas gagné.",
+    withGap: "— On va devoir tout recommencer… — ___",
+    answer: "C’est pas gagné"
+  }
+];
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercises() {
+  const drop = document.getElementById("dropdown-ex");
+  const input = document.getElementById("input-ex");
+
+  dialogues.forEach((dlg, i) => {
+    const options = shuffle([...expressions])
+      .map(e => `<option value="${e}">${e}</option>`)
+      .join("");
+
+    drop.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊</button><br>
+        ${dlg.withGap.replace("___", `<select id="dd${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+
+    input.innerHTML += `
+      <div class="question">
+        ${dlg.withGap.replace("___", `<input type="text" id="in${i}" placeholder="...">`)}
+      </div>
+    `;
+  });
+}
+
+function checkDropdown() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("dd" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score1").innerText = `Exercice 1 : ${score} / ${dialogues.length}`;
+}
+
+function checkInput() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const val = document.getElementById("in" + i).value.trim().toLowerCase();
+    const input = document.getElementById("in" + i);
+    input.classList.remove("correct", "missed");
+    if (val === dlg.answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("score2").innerText = `Exercice 2 : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercises;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Grand dialogue 2 — Expressions à choix</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .hint { display: none; color: gray; font-style: italic; }
+    .translation { display: none; margin-top: 5px; color: #444; font-style: italic; }
+    select { padding: 5px; }
+    button { margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>🗣️ Grand dialogue — Partie 2</h2>
+<p>Choisissez les bonnes expressions dans le dialogue. Cliquez sur 🔍 pour un indice. Après vérification, le texte sera traduit en russe.</p>
+
+<div id="dialogue"></div>
+<p id="score"></p>
+
+<button onclick="checkAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "T'inquiète", "Je suis crevé", "C’est pas mal", "Tu m’étonnes", "J’en peux plus",
+  "C’est clair", "Je m’en occupe", "Je suis partant", "Ça me dit rien", "Tu rigoles ou quoi ?",
+  "On s’arrache", "J’ai failli oublier", "C’est pas gagné"
+];
+
+const distractors = [
+  "Bonne soirée", "Je vais au marché", "C’est trop tôt", "Je pars demain", "Je suis en train",
+  "J’ai oublié le code", "Tu veux un café ?", "C’est difficile à dire", "J’aime les chats", "Tu rêves"
+];
+
+const dialogueLines = [
+  {
+    text: "— Salut ! Tu veux venir au ciné ce soir ?",
+    answer: "Je suis partant",
+    hint: "Expression pour dire qu’on accepte une invitation.",
+    translation: "— Привіт! Хочеш піти в кіно сьогодні ввечері? — Я за!"
+  },
+  {
+    text: "— Super. Y a un nouveau film français qui sort.",
+    gap: false
+  },
+  {
+    text: "— Ah bon ? ___, les films français sont souvent sympas.",
+    answer: "Tu m’étonnes",
+    hint: "Expression ironique : on est d’accord.",
+    translation: "— Справді? Не дивно, французькі фільми зазвичай хороші."
+  },
+  {
+    text: "— Je te prends une place ?",
+    gap: false
+  },
+  {
+    text: "— Oui, merci. ___ !",
+    answer: "Je m’en occupe",
+    hint: "Tu dis que tu vas faire quelque chose.",
+    translation: "— Так, дякую. Я сам цим займуся."
+  },
+  {
+    text: "— Tu vas bien sinon ?",
+    gap: false
+  },
+  {
+    text: "— Franchement, non… ___ depuis ce matin.",
+    answer: "J’en peux plus",
+    hint: "Tu es très fatigué, stressé ou énervé.",
+    translation: "— Чесно кажучи, ні… Я вже не витримую з самого ранку."
+  },
+  {
+    text: "— T’as encore eu des réunions inutiles ?",
+    gap: false
+  },
+  {
+    text: "— Oui, et le chef a changé tout le projet. ___ !",
+    answer: "Tu rigoles ou quoi ?",
+    hint: "Pour montrer qu’on est choqué ou en colère.",
+    translation: "— Так, і начальник змінив увесь проєкт. — Ти жартуєш?!"
+  },
+  {
+    text: "— On va boire un verre avant le film ?",
+    gap: false
+  },
+  {
+    text: "— Pourquoi pas, mais ___, j’ai dormi 4 heures.",
+    answer: "Je suis crevé",
+    hint: "Tu es très fatigué.",
+    translation: "— Чому б і ні, але я виснажений, я спав лише 4 години."
+  },
+  {
+    text: "— Bon alors, on se retrouve à 19h devant le cinéma ?",
+    gap: false
+  },
+  {
+    text: "— OK. ___, je dois finir un mail avant.",
+    answer: "C’est clair",
+    hint: "Expression pour dire qu’on confirme ou approuve.",
+    translation: "— Гаразд. Однозначно, мені ще потрібно дописати листа."
+  },
+  {
+    text: "— Et le resto après ?",
+    gap: false
+  },
+  {
+    text: "— Hmm… ___, j’ai pas trop faim.",
+    answer: "Ça me dit rien",
+    hint: "Expression pour dire qu’on n’a pas envie.",
+    translation: "— Хм… Мені щось не хочеться, я не дуже голодний."
+  },
+  {
+    text: "— T’as pensé à prendre ta carte d’étudiant ?",
+    gap: false
+  },
+  {
+    text: "— Mince ! ___ !",
+    answer: "J’ai failli oublier",
+    hint: "Tu as presque oublié quelque chose.",
+    translation: "— Ой! Я ледь не забув!"
+  },
+  {
+    text: "— On prend les tickets et ___ ?",
+    answer: "On s’arrache",
+    hint: "Expression familière pour dire 'on y va / on part'.",
+    translation: "— Купимо квитки — і гайда?"
+  },
+  {
+    text: "— Il va pleuvoir ce soir…",
+    gap: false
+  },
+  {
+    text: "— ___, j’ai pris mon parapluie.",
+    answer: "T'inquiète",
+    hint: "Expression pour rassurer.",
+    translation: "— Не хвилюйся, я взяв парасольку."
+  },
+  {
+    text: "— Et t’as compris les règles du jeu du film interactif ?",
+    gap: false
+  },
+  {
+    text: "— Pas vraiment… ___.",
+    answer: "C’est pas gagné",
+    hint: "Quand quelque chose semble difficile.",
+    translation: "— Не дуже… Сумнівно, що все вийде."
+  }
+];
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function createDialogue() {
+  const container = document.getElementById("dialogue");
+  let index = 0;
+
+  dialogueLines.forEach((line, i) => {
+    let html = `<div class="question"><strong>Ligne ${i + 1}:</strong> `;
+    if (line.gap === false || !line.answer) {
+      html += `${line.text}</div>`;
+    } else {
+      const choices = shuffle([
+        line.answer,
+        ...shuffle(distractors).slice(0, 5)
+      ]);
+      html += `${line.text.replace("___", `
+        <select id="q${index}">
+          <option value="">—</option>
+          ${choices.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+        </select>
+        <button onclick="document.getElementById('hint${index}').style.display='inline'">🔍 Voir l’indice</button>
+        <div class="hint" id="hint${index}">${line.hint}</div>
+        <div class="translation" id="tr${index}">${line.translation}</div>
+      `)}</div>`;
+      index++;
+    }
+    container.innerHTML += html;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  let total = 0;
+  let index = 0;
+  dialogueLines.forEach(line => {
+    if (line.answer) {
+      const input = document.getElementById("q" + index);
+      const translation = document.getElementById("tr" + index);
+      if (input) {
+        total++;
+        const val = input.value;
+        input.classList.remove("correct", "missed");
+        if (val === line.answer) {
+          input.classList.add("correct");
+          score++;
+        } else {
+          input.classList.add("missed");
+        }
+        if (translation) translation.style.display = "block";
+        index++;
+      }
+    }
+  });
+  document.getElementById("score").innerText = `Résultat : ${score} / ${total} bonne(s) réponse(s).`;
+}
+
+window.onload = createDialogue;
+</script>
+
+</body>
+</html>

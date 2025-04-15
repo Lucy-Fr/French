@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes — Série 10</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    table { border-collapse: collapse; margin-bottom: 30px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    .reg { font-style: italic; color: gray; }
+    .question { margin-bottom: 25px; }
+    select, input[type="text"] { padding: 6px; margin-top: 5px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 10</h2>
+<p>Voici 10 expressions fréquentes avec leur traduction, explication grammaticale et registre :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Грамматика</th><th>Регистр</th></tr>
+  <tr><td>On y va ?</td><td>Пойдём? / Пошли?</td><td>Фраза с местоимением "y"</td><td class="reg">разг.</td></tr>
+  <tr><td>Ça tombe bien</td><td>Кстати / Вовремя</td><td>Выражение с "tomber"</td><td class="reg">разг.</td></tr>
+  <tr><td>J’en ai marre</td><td>С меня хватит</td><td>Глагол "en avoir marre"</td><td class="reg">разг.</td></tr>
+  <tr><td>Ça me va</td><td>Мне подходит</td><td>Фраза с глаголом "aller"</td><td class="reg">нейтр.</td></tr>
+  <tr><td>J’y tiens</td><td>Для меня это важно</td><td>Глагол "tenir à qch"</td><td class="reg">нейтр.</td></tr>
+  <tr><td>T’inquiète</td><td>Не переживай</td><td>Сокращение от "Ne t’inquiète pas"</td><td class="reg">разг.</td></tr>
+  <tr><td>J’en peux plus</td><td>Я больше не могу</td><td>Глагол "pouvoir" с "en"</td><td class="reg">разг.</td></tr>
+  <tr><td>À toi de voir</td><td>Тебе решать</td><td>Выражение с инфинитивом "voir"</td><td class="reg">нейтр.</td></tr>
+  <tr><td>Fais gaffe</td><td>Осторожно / Берегись</td><td>Императив от "faire attention"</td><td class="reg">разг.</td></tr>
+  <tr><td>J’y suis</td><td>Я понял / Я уловил</td><td>Глагол "être" с местоимением "y"</td><td class="reg">разг.</td></tr>
+</table>
+
+<h3>🧩 Exercice 1 — Choisissez l'expression correcte</h3>
+<p>Complétez chaque dialogue. Cliquez sur 🔊 pour écouter.</p>
+<div id="dropdown-ex"></div>
+<p id="score1"></p>
+
+<h3>✍️ Exercice 2 — Écrivez l'expression correcte</h3>
+<p>Inscrivez la bonne expression sans aide.</p>
+<div id="input-ex"></div>
+<p id="score2"></p>
+
+<button onclick="checkDropdown(); checkInput();">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "On y va ?", "Ça tombe bien", "J’en ai marre", "Ça me va", "J’y tiens",
+  "T’inquiète", "J’en peux plus", "À toi de voir", "Fais gaffe", "J’y suis"
+];
+
+const dialogues = [
+  {
+    full: "— Tu veux qu’on parte ? — On y va ?",
+    withGap: "— Tu veux qu’on parte ? — ___",
+    answer: "On y va ?"
+  },
+  {
+    full: "— Justement, je voulais te parler. — Ça tombe bien !",
+    withGap: "— Justement, je voulais te parler. — ___ !",
+    answer: "Ça tombe bien"
+  },
+  {
+    full: "— Encore une réunion inutile... — J’en ai marre.",
+    withGap: "— Encore une réunion inutile... — ___",
+    answer: "J’en ai marre"
+  },
+  {
+    full: "— Ce pantalon te plaît ? — Oui, ça me va.",
+    withGap: "— Ce pantalon te plaît ? — Oui, ___",
+    answer: "ça me va"
+  },
+  {
+    full: "— Tu veux vraiment garder ce vieux pull ? — Oui, j’y tiens.",
+    withGap: "— Tu veux vraiment garder ce vieux pull ? — Oui, ___",
+    answer: "j’y tiens"
+  },
+  {
+    full: "— Je suis en retard ! — T’inquiète.",
+    withGap: "— Je suis en retard ! — ___",
+    answer: "T’inquiète"
+  },
+  {
+    full: "— Tu as l’air crevé. — Oui, j’en peux plus.",
+    withGap: "— Tu as l’air crevé. — Oui, ___",
+    answer: "j’en peux plus"
+  },
+  {
+    full: "— On prend ce chemin ou l’autre ? — À toi de voir.",
+    withGap: "— On prend ce chemin ou l’autre ? — ___",
+    answer: "À toi de voir"
+  },
+  {
+    full: "— Le sol est mouillé. — Fais gaffe !",
+    withGap: "— Le sol est mouillé. — ___ !",
+    answer: "Fais gaffe"
+  },
+  {
+    full: "— Tu as compris ce que je voulais dire ? — Oui, j’y suis.",
+    withGap: "— Tu as compris ce que je voulais dire ? — Oui, ___",
+    answer: "j’y suis"
+  }
+];
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercises() {
+  const drop = document.getElementById("dropdown-ex");
+  const input = document.getElementById("input-ex");
+
+  dialogues.forEach((dlg, i) => {
+    const options = shuffle([...expressions])
+      .map(e => `<option value="${e}">${e}</option>`)
+      .join("");
+
+    drop.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊</button><br>
+        ${dlg.withGap.replace("___", `<select id="dd${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+
+    input.innerHTML += `
+      <div class="question">
+        ${dlg.withGap.replace("___", `<input type="text" id="in${i}" placeholder="...">`)}
+      </div>
+    `;
+  });
+}
+
+function checkDropdown() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("dd" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score1").innerText = `Exercice 1 : ${score} / ${dialogues.length}`;
+}
+
+function checkInput() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const val = document.getElementById("in" + i).value.trim().toLowerCase();
+    const input = document.getElementById("in" + i);
+    input.classList.remove("correct", "missed");
+    if (val === dlg.answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("score2").innerText = `Exercice 2 : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercises;
+</script>
+
+</body>
+</html>

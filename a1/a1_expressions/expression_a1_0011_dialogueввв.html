@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Grand dialogue — Expressions à choix</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .hint { display: none; color: gray; margin-top: 5px; font-style: italic; }
+    select { padding: 6px; }
+    button { margin: 5px 0; }
+  </style>
+</head>
+<body>
+
+<h2>🗣️ Grand dialogue — Choisissez les expressions correctes</h2>
+<p>Complétez ce dialogue avec les bonnes expressions. Cliquez sur 🔍 pour obtenir un indice si besoin.</p>
+
+<div id="dialogue"></div>
+
+<p id="score"></p>
+<button onclick="checkAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "Ça me va", "Tu gères", "Je croise les doigts", "C’est pas grave", "On y va ?",
+  "T’inquiète", "C’est clair", "Tu plaisantes", "J’en ai marre", "Je suis partant",
+  "Tu m’étonnes", "C’est pas gagné", "Je n’en peux plus", "Fais gaffe", "C’est du jamais vu"
+];
+
+const distractors = [
+  "Je m’en fiche", "Bonne nuit", "Je me suis perdu", "Tu veux du café ?", "Je pars en vacances",
+  "Ça sent bon", "J’arrive plus tard", "Je suis pressé", "C’est bizarre", "Tu fais la vaisselle ?"
+];
+
+const dialogueLines = [
+  {
+    text: "— Salut ! Tu es prêt pour ce soir ?",
+    gap: false
+  },
+  {
+    text: "— Presque. Il me manque encore un t-shirt. Celui-là, ___ ?",
+    answer: "Ça me va",
+    hint: "Expression pour dire qu’un vêtement convient."
+  },
+  {
+    text: "— Oui, nickel. Et la playlist ?",
+    gap: false
+  },
+  {
+    text: "— Déjà faite, et j’ai tout mixé moi-même. — ___ !",
+    answer: "Tu gères",
+    hint: "Compliment pour dire que quelqu’un fait quelque chose très bien."
+  },
+  {
+    text: "— Tu crois que beaucoup de gens vont venir ?",
+    gap: false
+  },
+  {
+    text: "— Je ne sais pas… ___ !",
+    answer: "Je croise les doigts",
+    hint: "Expression pour exprimer l’espoir."
+  },
+  {
+    text: "— Et Max ? Il a encore oublié d’apporter les boissons…",
+    gap: false
+  },
+  {
+    text: "— ___, il oublie toujours !",
+    answer: "Tu m’étonnes",
+    hint: "Expression ironique quand quelque chose ne surprend pas."
+  },
+  {
+    text: "— Il faut vraiment tout faire nous-mêmes.",
+    gap: false
+  },
+  {
+    text: "— ___, sérieux !",
+    answer: "J’en ai marre",
+    hint: "Pour dire qu’on en a assez."
+  },
+  {
+    text: "— Bon, on y va ou pas ?",
+    gap: false
+  },
+  {
+    text: "— Oui, bien sûr. ___",
+    answer: "On y va ?",
+    hint: "Forme interrogative pour proposer de partir."
+  },
+  {
+    text: "— Attention ! Tu as failli renverser le gâteau.",
+    gap: false
+  },
+  {
+    text: "— Oups, ___ !",
+    answer: "Fais gaffe",
+    hint: "Alerte pour dire de faire attention."
+  },
+  {
+    text: "— Il y a déjà 30 personnes dans le salon.",
+    gap: false
+  },
+  {
+    text: "— Sérieux ? ___ !",
+    answer: "C’est du jamais vu",
+    hint: "Pour dire que c’est exceptionnel."
+  },
+  {
+    text: "— Et si on allait danser ?",
+    gap: false
+  },
+  {
+    text: "— ___ ! J’adore cette chanson.",
+    answer: "Je suis partant",
+    hint: "Expression pour dire qu’on est d’accord pour faire quelque chose."
+  },
+  {
+    text: "— Mince, j’ai écrasé un verre…",
+    gap: false
+  },
+  {
+    text: "— ___, ça arrive.",
+    answer: "C’est pas grave",
+    hint: "Pour rassurer quand quelqu’un fait une erreur."
+  },
+  {
+    text: "— Tu crois que Paul va enfin venir ?",
+    gap: false
+  },
+  {
+    text: "— ___, avec lui on ne sait jamais.",
+    answer: "C’est pas gagné",
+    hint: "Expression quand on doute du succès de quelque chose."
+  }
+];
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function createDialogue() {
+  const container = document.getElementById("dialogue");
+  let qIndex = 0;
+
+  dialogueLines.forEach((line, i) => {
+    let html = `<div class="question"><strong>Ligne ${i + 1}:</strong> `;
+    if (line.gap === false && !line.answer) {
+      html += `${line.text}</div>`;
+    } else {
+      const allOptions = shuffle([
+        line.answer,
+        ...shuffle(distractors).slice(0, 5)
+      ]);
+      html += `${line.text.replace("___", `
+        <select id="q${qIndex}">
+          <option value="">—</option>
+          ${allOptions.map(e => `<option value="${e}">${e}</option>`).join("")}
+        </select>
+        <button onclick="document.getElementById('hint${qIndex}').style.display='inline'">🔍 Voir l’indice</button>
+        <span class="hint" id="hint${qIndex}">${line.hint}</span>
+      `)}</div>`;
+      qIndex++;
+    }
+    container.innerHTML += html;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  let total = 0;
+  let qIndex = 0;
+  dialogueLines.forEach(line => {
+    if (line.answer) {
+      const input = document.getElementById("q" + qIndex);
+      if (input) {
+        total++;
+        const user = input.value;
+        input.classList.remove("correct", "missed");
+        if (user === line.answer) {
+          input.classList.add("correct");
+          score++;
+        } else {
+          input.classList.add("missed");
+        }
+        qIndex++;
+      }
+    }
+  });
+  document.getElementById("score").innerText = `Résultat : ${score} / ${total} bonne(s) réponse(s).`;
+}
+
+window.onload = createDialogue;
+</script>
+
+</body>
+</html>

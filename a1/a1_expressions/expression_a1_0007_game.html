@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test auditif — Expressions courantes (Séries 6 et 7)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .answer { margin-left: 10px; }
+    input[type="text"] { padding: 6px; width: 300px; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+
+<h2>🎧 Test auditif — Expressions des séries 6 & 7</h2>
+<p>Écoutez chaque phrase et écrivez l'expression manquante sans proposition. Exercice 100 % compréhension orale !</p>
+
+<div id="test"></div>
+<p id="score"></p>
+
+<button onclick="checkTest()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const data = [
+  ["Tu rigoles ou quoi ? ___ !", "arrête tes conneries"],
+  ["C’est pas la peine, ___ !", "laisse tomber"],
+  ["Regarde-moi ce bazar... — ___", "c’est n’importe quoi"],
+  ["— T’as tout compris ? — ___", "tu gères"],
+  ["— Je veux pas y aller... — ___", "ça me saoule"],
+  ["— J’ai fait une erreur énorme... — ___", "je me suis planté"],
+  ["— T’as ton pass ? — ___", "bien sûr"],
+  ["— Allez viens, ___ !", "on s’arrache"],
+  ["— Encore lui ? ___", "ça m’énerve"],
+  ["— Il arrive dans 5 minutes. — ___ !", "c’est clair"],
+  ["— J’ai pas révisé... — ___", "je croise les doigts"],
+  ["— Il a encore gagné ? — ___", "tu m’étonnes"],
+  ["— On se voit ce soir ? — ___ ?", "ça te va"],
+  ["— Ce film ? ___", "ça me dit rien"],
+  ["— Désolé, je suis en retard. — ___", "pas de souci"],
+  ["— Ce boulot me stresse. — ___", "j’en peux plus"],
+  ["— Tu sais pas ? — ___", "je ne sais pas"],
+  ["— Tu viens ? — ___", "j’arrive"],
+  ["— Tu viens à la fête ? — ___", "je suis partant"],
+  ["— Il a crié devant tout le monde ? — ___ !", "j’arrive pas à croire"]
+];
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voice = speechSynthesis.getVoices().find(v => v.lang === 'fr-FR');
+  if (voice) utterance.voice = voice;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function createTest() {
+  const container = document.getElementById("test");
+  data.forEach((item, i) => {
+    container.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${item[0]}')">🔊 Écouter</button><br>
+        <input type="text" id="q${i}" placeholder="Votre réponse...">
+        <span class="answer" id="a${i}"></span>
+      </div>
+    `;
+  });
+}
+
+function checkTest() {
+  let score = 0;
+  data.forEach((item, i) => {
+    const input = document.getElementById("q" + i);
+    const expected = item[1].toLowerCase().trim();
+    const user = input.value.toLowerCase().trim();
+    const feedback = document.getElementById("a" + i);
+    input.classList.remove("correct", "missed");
+    if (user === expected) {
+      input.classList.add("correct");
+      feedback.textContent = "✅";
+      score++;
+    } else {
+      input.classList.add("missed");
+      feedback.textContent = `❌ (${item[1]})`;
+    }
+  });
+  document.getElementById("score").textContent = `Résultat : ${score} / ${data.length} bonne(s) réponse(s).`;
+}
+
+window.onload = createTest;
+</script>
+
+</body>
+</html>

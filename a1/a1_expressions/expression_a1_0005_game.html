@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Maxi-jeu 2 — Expressions courantes (séries 4 à 6)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .answer { margin-left: 10px; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+  <h2>🎯 Maxi-jeu — Expressions courantes (Séries 4 à 6)</h2>
+  <p>Complétez chaque phrase avec l'expression correcte. Cliquez sur 🔊 pour écouter.</p>
+  <div id="game"></div>
+  <p id="result"></p>
+  <button onclick="checkGame()">Vérifier</button>
+  <button onclick="location.reload()">Réinitialiser</button>
+
+  <p>
+    <a href="../a1_expressions.html">← Retour aux expressions</a> |
+    <a href="../../index.html">🏠 Accueil</a>
+  </p>
+
+  <script>
+    const expressions = [
+      "Ça me saoule", "C’est chiant", "Tu te fiches de moi ?", "Je m’en sors pas", "C’est pas donné",
+      "C’est pas mal", "Tu te moques ?", "Tu veux rire ?", "C’est pas mon truc", "C’est pas terrible",
+      "Ça y est", "Je suis partant(e)", "Tu gères", "J’ai la flemme", "Je me suis planté(e)",
+      "Nickel", "Laisse tomber", "On se casse", "C’est nul", "Franchement",
+      "T’inquiète", "Y a pas de souci", "J’arrive pas à croire", "Ça fait longtemps", "C’est clair",
+      "Ça te va ?", "Ça me dit rien", "C’est pas grave", "Tu m’étonnes", "Ça ne me regarde pas"
+    ];
+
+    const questions = [
+      ["— Il pleut encore. — ___", "C’est chiant", "select"],
+      ["— Je me suis trompé d’arrêt. — ___", "Je me suis planté(e)", "select"],
+      ["— C’est pas très bon. — ___", "C’est pas terrible", "text"],
+      ["— Tu fais encore une blague ? — ___", "Tu veux rire ?", "text"],
+      ["— J’ai tout rangé. — ___", "Nickel", "select"],
+      ["— Il a oublié mon anniv… — ___", "Laisse tomber", "text"],
+      ["— Tu veux venir ? — ___", "Je suis partant(e)", "select"],
+      ["— C’est fini ? — ___", "Ça y est", "select"],
+      ["— Il t’a encore menti ? — ___", "Tu te fiches de moi ?", "text"],
+      ["— C’est très cher ! — ___", "C’est pas donné", "select"],
+      ["— T’as bien géré ce projet ! — ___", "Tu gères", "text"],
+      ["— Tu veux sortir ? — ___", "J’ai la flemme", "text"],
+      ["— J’ai encore oublié mes clés… — ___", "Je m’en sors pas", "select"],
+      ["— Ce film est nul ! — ___", "C’est nul", "text"],
+      ["— Je sais pas si j’aime ça. — ___", "C’est pas mon truc", "select"],
+      ["— Il fait froid. — ___", "On se casse", "text"],
+      ["— J’ai pas trop aimé. — ___", "C’est pas mal", "select"],
+      ["— Tu viens ? — ___", "Ça me saoule", "text"],
+      ["— Je dois refaire tout le travail. — ___", "Franchement", "select"],
+      ["— T’as compris ? — ___", "T’inquiète", "text"],
+      ["— Merci pour ton aide ! — ___", "Y a pas de souci", "text"],
+      ["— Il a gagné au loto ? — ___", "J’arrive pas à croire", "select"],
+      ["— Tu vas bien ? — ___", "Ça fait longtemps", "text"],
+      ["— Il abuse grave ! — ___", "C’est clair", "select"],
+      ["— On se retrouve à 20h. ___ ?", "Ça te va ?", "text"],
+      ["— Tu connais ce chanteur ? — ___", "Ça me dit rien", "text"],
+      ["— Je suis désolé. — ___", "C’est pas grave", "text"],
+      ["— Il recommence encore… — ___", "Tu m’étonnes", "text"],
+      ["— Regarde ce message. — ___", "Ça ne me regarde pas", "select"],
+      ["— Il crie tout le temps ! — ___", "Ça me saoule", "text"],
+      ["— On a fini. — ___", "Ça y est", "select"]
+    ];
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'fr-FR';
+      const voices = speechSynthesis.getVoices();
+      const fr = voices.find(v => v.lang === 'fr-FR');
+      if (fr) utterance.voice = fr;
+      speechSynthesis.speak(utterance);
+    }
+
+    speechSynthesis.onvoiceschanged = () => {};
+
+    function renderGame() {
+      const container = document.getElementById("game");
+      questions.forEach((q, i) => {
+        let input;
+        if (q[2] === "select") {
+          const shuffled = [...expressions].sort(() => Math.random() - 0.5);
+          input = `<select id="q${i}"><option value="">—</option>${shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("")}</select>`;
+        } else {
+          input = `<input type="text" id="q${i}" placeholder="...">`;
+        }
+        container.innerHTML += `
+          <div class="question">
+            <button onclick="speak('${q[0]} ${q[1]}')">🔊</button>
+            ${q[0].replace("___", input)} 
+            <span class="answer" id="a${i}"></span>
+          </div>
+        `;
+      });
+    }
+
+    function checkGame() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const input = document.getElementById("q" + i);
+        const correct = q[1].toLowerCase();
+        const userVal = input.value.trim().toLowerCase();
+        const feedback = document.getElementById("a" + i);
+        input.classList.remove("correct", "missed");
+        if (userVal === correct) {
+          input.classList.add("correct");
+          feedback.innerText = "✅";
+          score++;
+        } else {
+          input.classList.add("missed");
+          feedback.innerText = `❌ (${q[1]})`;
+        }
+      });
+      document.getElementById("result").innerText = `Résultat : ${score} bonne(s) réponse(s) sur ${questions.length}.`;
+    }
+
+    window.onload = renderGame;
+  </script>
+</body>
+</html>

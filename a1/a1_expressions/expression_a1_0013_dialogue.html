@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dialogue administratif — Expressions à choix</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .hint { display: none; color: gray; font-style: italic; }
+    .translation { display: none; margin-top: 5px; color: #444; font-style: italic; }
+    select { padding: 5px; }
+    button { margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>📑 Dialogue administratif — Complétez les expressions</h2>
+<p>Choisissez l'expression correcte dans chaque situation. Cliquez sur 🔍 pour un indice. Le texte sera traduit en russe après vérification.</p>
+
+<div id="dialogue"></div>
+<p id="score"></p>
+
+<button onclick="checkAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "Je voudrais savoir", "Je n’ai pas reçu", "J’ai besoin de", "C’est urgent", "Je comprends bien",
+  "Ce n’est pas clair", "Je suis désolé", "Je vais vérifier", "Merci de patienter", "Il me manque",
+  "Je vous en prie", "Je dois le faire en ligne", "Je n’arrive pas à accéder"
+];
+
+const distractors = [
+  "Je mange une pomme", "Je vais à la piscine", "Il pleut demain", "C’est un bon film",
+  "Je suis à la plage", "J’ai trois chats", "Tu veux du pain ?", "Elle danse bien",
+  "C’est intéressant", "Je joue au tennis"
+];
+
+const dialogueLines = [
+  {
+    text: "— Bonjour madame. ___ si mon dossier a été validé.",
+    answer: "Je voudrais savoir",
+    hint: "Formule polie pour demander une information.",
+    translation: "— Добрий день, пані. Я хотів(ла) би дізнатися, чи була моя справа схвалена."
+  },
+  {
+    text: "— Bonjour. Un instant… ___ quelques minutes.",
+    answer: "Merci de patienter",
+    hint: "Expression pour demander d’attendre poliment.",
+    translation: "— Добрий день. Один момент... Дякую, що чекаєте."
+  },
+  {
+    text: "— ___ le justificatif de domicile.",
+    answer: "Il me manque",
+    hint: "Vous dites que vous n’avez pas un document.",
+    translation: "— У мене немає довідки про місце проживання."
+  },
+  {
+    text: "— Vous devez nous l’apporter avant vendredi.",
+    gap: false
+  },
+  {
+    text: "— ___ l’obtenir rapidement.",
+    answer: "J’ai besoin de",
+    hint: "Vous exprimez un besoin administratif.",
+    translation: "— Мені потрібно його швидко отримати."
+  },
+  {
+    text: "— ___ car mon titre de séjour expire demain.",
+    answer: "C’est urgent",
+    hint: "Vous exprimez une urgence.",
+    translation: "— Це терміново, бо мій дозвіл на проживання закінчується завтра."
+  },
+  {
+    text: "— ___, mais je ne peux rien faire sans ce document.",
+    answer: "Je comprends bien",
+    hint: "Vous montrez que vous comprenez la situation.",
+    translation: "— Я розумію, але я нічого не можу зробити без цього документа."
+  },
+  {
+    text: "— ___, vous devez prendre rendez-vous en ligne.",
+    answer: "Je suis désolé",
+    hint: "Formule polie pour annoncer une difficulté.",
+    translation: "— Вибачте, вам потрібно записатися онлайн."
+  },
+  {
+    text: "— ___ au site internet, ça bloque à chaque fois.",
+    answer: "Je n’arrive pas à accéder",
+    hint: "Vous avez un problème technique.",
+    translation: "— Я не можу зайти на сайт, він постійно зависає."
+  },
+  {
+    text: "— Dans ce cas, ___ avec mes collègues.",
+    answer: "Je vais vérifier",
+    hint: "Vous allez demander plus d’informations.",
+    translation: "— У такому разі я уточню з колегами."
+  },
+  {
+    text: "— ___ votre aide et votre compréhension.",
+    answer: "Je vous en prie",
+    hint: "Réponse polie à quelqu’un qui vous remercie.",
+    translation: "— Прошу, звертайтеся (у відповідь на «дякую»)."
+  },
+  {
+    text: "— ___ de réponse depuis trois semaines.",
+    answer: "Je n’ai pas reçu",
+    hint: "Vous n’avez pas eu de retour.",
+    translation: "— Я не отримував(-ла) відповіді вже три тижні."
+  },
+  {
+    text: "— Dans ce cas, ___ une nouvelle demande.",
+    answer: "Je dois le faire en ligne",
+    hint: "Vous devez faire la démarche via Internet.",
+    translation: "— У такому випадку я повинен(-на) подати нову заяву онлайн."
+  },
+  {
+    text: "— ___ ce que vous me dites.",
+    answer: "Ce n’est pas clair",
+    hint: "Vous dites que ce n’est pas compréhensible.",
+    translation: "— Мені не зовсім зрозуміло, що ви кажете."
+  }
+];
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function createDialogue() {
+  const container = document.getElementById("dialogue");
+  let index = 0;
+  dialogueLines.forEach((line, i) => {
+    let html = `<div class="question"><strong>Ligne ${i + 1}:</strong> `;
+    if (!line.answer) {
+      html += `${line.text}</div>`;
+    } else {
+      const options = shuffle([
+        line.answer,
+        ...shuffle(distractors).slice(0, 5)
+      ]);
+      html += line.text.replace("___", `
+        <select id="q${index}">
+          <option value="">—</option>
+          ${options.map(e => `<option value="${e}">${e}</option>`).join("")}
+        </select>
+        <button onclick="document.getElementById('hint${index}').style.display='inline'">🔍 Voir l’indice</button>
+        <div class="hint" id="hint${index}">${line.hint}</div>
+        <div class="translation" id="tr${index}">${line.translation}</div>
+      `);
+      html += `</div>`;
+      index++;
+    }
+    container.innerHTML += html;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  let total = 0;
+  let index = 0;
+  dialogueLines.forEach(line => {
+    if (line.answer) {
+      const input = document.getElementById("q" + index);
+      const translation = document.getElementById("tr" + index);
+      if (input) {
+        total++;
+        const user = input.value;
+        input.classList.remove("correct", "missed");
+        if (user === line.answer) {
+          input.classList.add("correct");
+          score++;
+        } else {
+          input.classList.add("missed");
+        }
+        if (translation) translation.style.display = "block";
+        index++;
+      }
+    }
+  });
+  document.getElementById("score").innerText = `Résultat : ${score} / ${total} bonne(s) réponse(s).`;
+}
+
+window.onload = createDialogue;
+</script>
+
+</body>
+</html>
