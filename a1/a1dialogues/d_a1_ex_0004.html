@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>À la préfecture de police — dialogue et exercices</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    .question { margin-bottom: 15px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { color: green; display: none; }
+    .exercise-block { margin-bottom: 40px; }
+    button { margin: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>Dialogue complet — À la préfecture de police</h2>
+<p>🔊 Cliquez sur 🔊 pour écouter chaque réplique.</p>
+
+<div id="dialogue-block"></div>
+
+<h3>Traduction en russe</h3>
+<div style="background:#f3f3f3; padding: 10px; border:1px solid #ccc; margin-bottom: 30px;">
+  <p><strong>— Добрый день, мадам, мне нужен новый паспорт срочно, потому что я должен уехать через три дня в Японию.</strong></p>
+  <p>— Ах, нет, господин, это невозможно! Нужно, по крайней мере, десять дней чтобы поменять паспорт.</p>
+  <p>— Неужели ничего нельзя сделать? Но что мне делать, тогда? Это — очень важная профессиональная поездка!</p>
+  <p>— Господин, ничем не могу помочь, таковы правила! И впрочем, почему вы пришли поменять паспорт в последнюю минуту?</p>
+  <p>— Но потому что я не знал, что я поеду в командировку! Мадам, для меня, это очень важно, этот паспорт! Это — катастрофа, если у меня его не будет!</p>
+  <p>— Господин, это не моя вина!</p>
+  <p>— Конечно, я вас не обвиняю! Но нужно обязательно, чтобы я поехал в Японию! Тогда, что вы мне порекомендуете сделать?</p>
+  <p>— Хорошо, ждите момент, я скоро вернусь.</p>
+  <p>— Дайте мне ваше досье…</p>
+  <p>— Ах, мадам, большое спасибо, вы действительно очень любезны!</p>
+  <p>— Вы можете завтра зайти, ваш паспорт будет готов!</p>
+  <p>— Мадам, если бы я мог, я бы вас расцеловал!</p>
+</div>
+
+<div class="exercise-block">
+  <h3>📝 Exercice 1 — Complétez les mots manquants</h3>
+  <div id="fill-gaps"></div>
+  <button onclick="checkFill()">Vérifier</button>
+  <p id="fill-score"></p>
+</div>
+
+<div class="exercise-block">
+  <h3>🧠 Exercice 2 — Compréhension des expressions</h3>
+  <p>Que veut dire : <strong>“changer un passeport à la dernière minute”</strong> ?</p>
+  <ul>
+    <li><label><input type="radio" name="q1" value="a"> Renouveler un passeport très tôt</label></li>
+    <li><label><input type="radio" name="q1" value="b"> Renouveler un passeport juste avant le départ</label></li>
+    <li><label><input type="radio" name="q1" value="c"> Changer de nom dans le passeport</label></li>
+  </ul>
+
+  <p>Que veut dire : <strong>“ce n’est pas ma faute”</strong> ?</p>
+  <ul>
+    <li><label><input type="radio" name="q2" value="a"> Ce n’est pas mon problème</label></li>
+    <li><label><input type="radio" name="q2" value="b"> Ce n’est pas de ma responsabilité</label></li>
+    <li><label><input type="radio" name="q2" value="c"> C’est ma faute</label></li>
+  </ul>
+
+  <button onclick="checkExpressions()">Vérifier</button>
+  <p id="expression-score"></p>
+</div>
+
+<div class="exercise-block">
+  <h3>⚙️ Exercice 3 — Choisissez la bonne construction</h3>
+  <p><strong>1.</strong> Il faut au moins dix jours pour <select id="g1">
+    <option>—</option>
+    <option>changer</option>
+    <option>partir</option>
+    <option>faire</option>
+  </select> un passeport.</p>
+
+  <p><strong>2.</strong> Je ne <select id="g2">
+    <option>—</option>
+    <option>savais</option>
+    <option>voulais</option>
+    <option>partais</option>
+  </select> pas que j’allais partir.</p>
+
+  <p><strong>3.</strong> Ce <select id="g3">
+    <option>—</option>
+    <option>est</option>
+    <option>sera</option>
+    <option>serait</option>
+  </select> une catastrophe si je ne l’ai pas.</p>
+
+  <button onclick="checkGrammar()">Vérifier</button>
+  <p id="grammar-score"></p>
+</div>
+
+<script>
+const dialogue = [
+  ["Client", "Bonjour, madame, j’ai besoin d’un nouveau ___ en urgence...", "passeport"],
+  ["Employée", "Ah non, monsieur, ce n’est pas possible ! Il faut au ___ dix jours...", "moins"],
+  ["Client", "C’est un voyage ___ très important !", "professionnel"],
+  ["Employée", "Pourquoi êtes-vous venu changer votre passeport à la dernière ___ ?", "minute"],
+  ["Client", "Ce serait une ___ si je ne l’avais pas !", "catastrophe"],
+  ["Client", "Alors, que me ___-vous de faire ?", "recommandez"]
+];
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const vf = voices.find(v => v.lang === 'fr-FR');
+  if (vf) u.voice = vf;
+  speechSynthesis.speak(u);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+const fullDialogue = [
+  ["Client", "Bonjour, madame, j’ai besoin d’un nouveau passeport en urgence, car je dois partir au Japon dans trois jours."],
+  ["Employée", "Ah non, monsieur, ce n’est pas possible ! Il faut au minimum dix jours pour renouveler un passeport."],
+  ["Client", "Il n’y a vraiment rien à faire ? Mais que dois-je faire, alors ? C’est un voyage professionnel très important !"],
+  ["Employée", "Monsieur, je ne peux rien faire, ce sont les règles ! Et d’ailleurs, pourquoi êtes-vous venu changer votre passeport à la dernière minute ?"],
+  ["Client", "Mais parce que je ne savais pas que j’allais partir en déplacement ! Madame, pour moi, ce passeport est très important ! Ce serait une catastrophe si je ne l’avais pas !"],
+  ["Employée", "Monsieur, ce n’est pas de ma faute !"],
+  ["Client", "Bien sûr, je ne vous reproche rien ! Mais il faut absolument que j’aille au Japon ! Alors, que me recommandez-vous de faire ?"],
+  ["Employée", "Très bien, attendez un instant, je reviens tout de suite."],
+  ["Employée", "Donnez-moi votre dossier…"],
+  ["Client", "Ah, madame, merci beaucoup, vous êtes vraiment très aimable !"],
+  ["Employée", "Vous pouvez repasser demain, votre passeport sera prêt !"],
+  ["Client", "Madame, si je pouvais, je vous embrasserais !"]
+];
+
+function renderDialogue() {
+  const container = document.getElementById("dialogue-block");
+  fullDialogue.forEach(([who, line], i) => {
+    container.innerHTML += `<p><strong>${who} :</strong> ${line} <button onclick="speak('${line}')">🔊</button></p>`;
+  });
+
+  const fill = document.getElementById("fill-gaps");
+  dialogue.forEach(([who, line, answer], i) => {
+    const inputId = `f${i}`;
+    const l = line.replace("___", `<input id="${inputId}" type="text" placeholder="...">`);
+    fill.innerHTML += `<div class="question"><strong>${who} :</strong> ${l}</div>`;
+  });
+}
+
+function checkFill() {
+  let score = 0;
+  dialogue.forEach(([, , ans], i) => {
+    const input = document.getElementById(`f${i}`);
+    const val = input.value.trim().toLowerCase();
+    input.classList.remove("correct", "missed");
+    if (val === ans.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("fill-score").innerText = `Résultat : ${score} / ${dialogue.length}`;
+}
+
+function checkExpressions() {
+  const q1 = document.querySelector('input[name="q1"]:checked');
+  const q2 = document.querySelector('input[name="q2"]:checked');
+  let score = 0;
+  if (q1 && q1.value === "b") score++;
+  if (q2 && q2.value === "b") score++;
+  document.getElementById("expression-score").innerText = `Résultat : ${score} / 2`;
+}
+
+function checkGrammar() {
+  let score = 0;
+  if (document.getElementById("g1").value === "changer") score++;
+  if (document.getElementById("g2").value === "savais") score++;
+  if (document.getElementById("g3").value === "serait") score++;
+  document.getElementById("grammar-score").innerText = `Résultat : ${score} / 3`;
+}
+
+window.onload = renderDialogue;
+</script>
+
+<p>
+  <a href="../a1_dialogues.html">← Retour aux dialogues</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+</body>
+</html>
