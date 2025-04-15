@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Passé composé avec ÊTRE — Choisissez la bonne forme du verbe "être"</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Passé composé avec ÊTRE — Choisissez la bonne forme du verbe "être"</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ allé au marché.", "suis", "Я пошёл на рынок."],
+  ["Tu ___ rentré tôt hier soir.", "es", "Ты вернулся рано вчера вечером."],
+  ["Il ___ né en 1995.", "est", "Он родился в 1995 году."],
+  ["Elle ___ descendue au sous-sol.", "est", "Она спустилась в подвал."],
+  ["Nous ___ partis ensemble.", "sommes", "Мы ушли вместе."],
+  ["Vous ___ arrivés à temps ?", "êtes", "Вы пришли вовремя?"],
+  ["Ils ___ sortis du cinéma.", "sont", "Они вышли из кинотеатра."],
+  ["Elles ___ montées à l’étage.", "sont", "Они поднялись на этаж (жен.)."],
+  ["Tu ___ venue avec ta sœur ?", "es", "Ты пришла с сестрой?"],
+  ["Je ___ resté à la maison.", "suis", "Я остался дома."],
+  ["Elle ___ allée en Italie.", "est", "Она поехала в Италию."],
+  ["Il ___ retourné au travail.", "est", "Он вернулся на работу."],
+  ["Nous ___ revenus tard.", "sommes", "Мы вернулись поздно."],
+  ["Vous ___ tombées ?", "êtes", "Вы упали? (жен. мн.)"],
+  ["Ils ___ passés par la porte.", "sont", "Они прошли через дверь."],
+  ["Je ___ montée dans le bus.", "suis", "Я поднялась в автобус."],
+  ["Tu ___ sorti ce matin ?", "es", "Ты выходил утром?"],
+  ["Elle ___ morte l’année dernière.", "est", "Она умерла в прошлом году."],
+  ["Nous ___ arrivées ensemble.", "sommes", "Мы прибыли вместе (жен.)."],
+  ["Vous ___ partis trop tôt.", "êtes", "Вы ушли слишком рано."],
+  ["Ils ___ nés en hiver.", "sont", "Они родились зимой."],
+  ["Elles ___ venues en taxi.", "sont", "Они приехали на такси (жен.)."],
+  ["Il ___ tombé de l’échelle.", "est", "Он упал с лестницы."],
+  ["Elle ___ revenue immédiatement.", "est", "Она вернулась сразу же."],
+  ["Tu ___ allé à l’université ?", "es", "Ты пошёл в университет?"],
+  ["Je ___ sorti avec mes amis.", "suis", "Я вышел с друзьями."],
+  ["Nous ___ montés à pied.", "sommes", "Мы поднялись пешком."],
+  ["Vous ___ descendus trop vite.", "êtes", "Вы спустились слишком быстро."],
+  ["Ils ___ rentrés après minuit.", "sont", "Они вернулись после полуночи."],
+  ["Elles ___ restées à l’hôtel.", "sont", "Они остались в отеле (жен.)."]
+];
+
+const options = ["suis", "es", "est", "sommes", "êtes", "sont"];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<select id="${qId}">
+               <option value="">-- choisissez --</option>
+               ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+             </select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

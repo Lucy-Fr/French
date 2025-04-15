@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Passé composé — Choisissez la bonne forme</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Passé composé — Choisissez la bonne forme</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ un café ce matin. (boire)", "ai bu", "Я выпил кофе этим утром."],
+  ["Tu ___ la porte. (ouvrir)", "as ouvert", "Ты открыл дверь."],
+  ["Il ___ un gâteau. (faire)", "a fait", "Он сделал торт."],
+  ["Elle ___ à l'école à 8h. (arriver)", "est arrivée", "Она пришла в школу в 8 часов."],
+  ["Nous ___ le musée hier. (visiter)", "avons visité", "Мы посетили музей вчера."],
+  ["Vous ___ en avance. (être)", "avez été", "Вы были раньше времени."],
+  ["Ils ___ une chanson. (chanter)", "ont chanté", "Они спели песню."],
+  ["Elles ___ le film. (regarder)", "ont regardé", "Они посмотрели фильм."],
+  ["Je ___ mon sac. (perdre)", "ai perdu", "Я потерял свою сумку."],
+  ["Tu ___ un message. (écrire)", "as écrit", "Ты написал сообщение."],
+  ["Il ___ la vérité. (dire)", "a dit", "Он сказал правду."],
+  ["Elle ___ en retard. (être)", "a été", "Она опоздала."],
+  ["Nous ___ un bon dîner. (préparer)", "avons préparé", "Мы приготовили хороший ужин."],
+  ["Vous ___ la bonne réponse. (donner)", "avez donné", "Вы дали правильный ответ."],
+  ["Ils ___ en vacances. (partir)", "sont partis", "Они уехали в отпуск."],
+  ["Elles ___ à la maison. (rester)", "sont restées", "Они остались дома."],
+  ["Je ___ un cadeau. (recevoir)", "ai reçu", "Я получил подарок."],
+  ["Tu ___ un bon film ? (voir)", "as vu", "Ты посмотрел хороший фильм?"],
+  ["Il ___ ses clés. (trouver)", "a trouvé", "Он нашёл свои ключи."],
+  ["Elle ___ à sa mère. (répondre)", "a répondu", "Она ответила своей маме."],
+];
+
+const options = ["ai bu", "as bu", "a bu", "avons bu", "avez bu", "ont bu",
+  "ai été", "as été", "a été", "avons été", "avez été", "ont été",
+  "ai vu", "as vu", "a vu", "avons vu", "avez vu", "ont vu",
+  "ai fait", "as fait", "a fait", "avons fait", "avez fait", "ont fait",
+  "ai dit", "as dit", "a dit", "avons dit", "avez dit", "ont dit",
+  "ai reçu", "as reçu", "a reçu", "avons reçu", "avez reçu", "ont reçu",
+  "ai écrit", "as écrit", "a écrit", "avons écrit", "avez écrit", "ont écrit",
+  "ai trouvé", "as trouvé", "a trouvé", "avons trouvé", "avez trouvé", "ont trouvé",
+  "suis allé", "es allé", "est allé", "sommes allés", "êtes allés", "sont allés",
+  "suis arrivé", "es arrivé", "est arrivé", "est arrivée", "sommes arrivés", "êtes arrivés", "sont arrivés",
+  "suis parti", "es parti", "est parti", "sommes partis", "êtes partis", "sont partis",
+  "suis resté", "es resté", "est resté", "sommes restés", "êtes restés", "sont restés",
+  "suis restée", "es restée", "est restée", "sommes restées", "êtes restées", "sont restées",
+  "ai perdu", "as perdu", "a perdu", "avons perdu", "avez perdu", "ont perdu",
+  "ai répondu", "as répondu", "a répondu", "avons répondu", "avez répondu", "ont répondu",
+  "avons visité", "avez visité", "ont visité",
+  "avons préparé", "avez préparé", "ont préparé",
+  "avez donné", "ont donné",
+  "ont chanté", "ont regardé"];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<select id="${qId}">
+               <option value="">-- choisissez --</option>
+               ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+             </select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
