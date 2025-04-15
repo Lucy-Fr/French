@@ -2,7 +2,19 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <h2>Dialogue complet – Au rayon traiteur</h2>
+  <title>Dialogue : Au rayon traiteur — exercice à trous et grammaire</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    button { margin: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>Dialogue complet – Au rayon traiteur</h2>
 <div style="background:#f9f9f9; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px;">
   <p><strong>Client :</strong> Bonjour, je voudrais une part de quiche, s’il vous plaît.</p>
   <p><strong>Employé :</strong> Bien sûr. Autre chose ?</p>
@@ -15,17 +27,19 @@
   <p><strong>Client :</strong> Voici. Merci, bonne journée !</p>
 </div>
 
-  <title>Dialogue : Au rayon traiteur — exercice à trous et grammaire</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .question { margin-bottom: 20px; }
-    .correct { background-color: #c8f7c5; }
-    .missed { background-color: #fce3e3; }
-    .explanation { color: green; display: none; margin-top: 5px; }
-    button { margin: 5px; }
-  </style>
-</head>
-<body>
+<h3>Перевод диалога на русский</h3>
+<div style="background:#f3f3f3; padding: 10px; border: 1px solid #ccc; margin-bottom: 30px;">
+  <p><strong>Покупатель:</strong> Здравствуйте, я бы хотел кусок киша, пожалуйста.</p>
+  <p><strong>Продавец:</strong> Конечно. Что-нибудь ещё?</p>
+  <p><strong>Покупатель:</strong> Да, ещё два кусочка пиццы, пожалуйста.</p>
+  <p><strong>Продавец:</strong> С удовольствием. А может быть салат из макарон?</p>
+  <p><strong>Покупатель:</strong> Да, почему бы и нет. А у вас есть домашний табуле?</p>
+  <p><strong>Продавец:</strong> Да, прямо здесь, рядом с овощной запеканкой.</p>
+  <p><strong>Покупатель:</strong> Возьму и его. Сколько с меня?</p>
+  <p><strong>Продавец:</strong> Двенадцать евро пятьдесят, пожалуйста.</p>
+  <p><strong>Покупатель:</strong> Вот. Спасибо, хорошего дня!</p>
+</div>
+
 <h2>Dialogue : Au rayon traiteur — exercice à trous avec audio</h2>
 <p>Complétez les mots manquants dans ce dialogue. Cliquez sur 🔊 pour écouter chaque ligne.</p>
 
@@ -61,8 +75,18 @@ const dialogue = [
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'fr-FR';
+
+  const voices = speechSynthesis.getVoices();
+  const frenchVoice = voices.find(voice => voice.lang === 'fr-FR');
+  if (frenchVoice) {
+    utterance.voice = frenchVoice;
+  }
+
   speechSynthesis.speak(utterance);
 }
+
+// Forcer le chargement des voix
+speechSynthesis.onvoiceschanged = () => {};
 
 function createDialogue() {
   const container = document.getElementById("dialogue-container");
@@ -76,7 +100,7 @@ function createDialogue() {
       inputField = `<input type='text' id='${qId}' placeholder='...'>`;
     }
     const displayLine = line.replace("___", inputField);
-    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak(\"${line.replace('___', answer)}\")">🔊</button>
+    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak('${line.replace('___', answer)}')">🔊</button>
     <div id='exp${i + 1}' class='explanation'>✅ ${line.replace('___', answer)}</div></div>`;
     container.innerHTML += html;
   }
@@ -145,5 +169,6 @@ window.onload = createDialogue;
   <a href="../a1_dialogues.html">← Retour aux dialogues</a> |
   <a href="../../index.html">🏠 Accueil</a>
 </p>
+
 </body>
 </html>
