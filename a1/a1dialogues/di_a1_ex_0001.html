@@ -13,6 +13,31 @@
   </style>
 </head>
 <body>
+
+<h2>Dialogue complet – À la boulangerie</h2>
+<div style="background:#f9f9f9; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px;">
+  <p><strong>Client :</strong> Bonjour, je voudrais une baguette, s'il vous plaît.</p>
+  <p><strong>Boulangère :</strong> Bien sûr ! Et avec ceci ?</p>
+  <p><strong>Client :</strong> Je vais prendre aussi deux pains au chocolat.</p>
+  <p><strong>Boulangère :</strong> Très bien. Ce sera tout ?</p>
+  <p><strong>Client :</strong> Oui, merci. Combien je vous dois ?</p>
+  <p><strong>Boulangère :</strong> Ça fait trois euros cinquante, s’il vous plaît.</p>
+  <p><strong>Client :</strong> Voilà. Merci beaucoup.</p>
+  <p><strong>Boulangère :</strong> Merci à vous. Bonne journée !</p>
+</div>
+
+<h3>Перевод на русский</h3>
+<div style="background:#f3f3f3; padding: 10px; border: 1px solid #ccc; margin-bottom: 30px;">
+  <p><strong>Покупатель:</strong> Здравствуйте, я бы хотел багет, пожалуйста.</p>
+  <p><strong>Продавщица:</strong> Конечно! Что-нибудь ещё?</p>
+  <p><strong>Покупатель:</strong> Я возьму ещё два шоколадных круассана.</p>
+  <p><strong>Продавщица:</strong> Хорошо. Это всё?</p>
+  <p><strong>Покупатель:</strong> Да, спасибо. Сколько я вам должен?</p>
+  <p><strong>Продавщица:</strong> С вас три евро пятьдесят, пожалуйста.</p>
+  <p><strong>Покупатель:</strong> Вот. Большое спасибо.</p>
+  <p><strong>Продавщица:</strong> Спасибо вам. Хорошего дня!</p>
+</div>
+
 <h2>Dialogue : À la boulangerie — exercice à trous avec audio</h2>
 <p>Complétez les mots manquants dans ce dialogue. Cliquez sur 🔊 pour écouter chaque ligne.</p>
 
@@ -37,8 +62,16 @@ const dialogue = [
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const frenchVoice = voices.find(voice => voice.lang === 'fr-FR');
+  if (frenchVoice) {
+    utterance.voice = frenchVoice;
+  }
   speechSynthesis.speak(utterance);
 }
+
+// Charger les voix à temps dans Edge/Chrome
+speechSynthesis.onvoiceschanged = () => {};
 
 function createDialogue() {
   const container = document.getElementById("dialogue-container");
@@ -52,7 +85,7 @@ function createDialogue() {
       inputField = `<input type='text' id='${qId}' placeholder='...'>`;
     }
     const displayLine = line.replace("___", inputField);
-    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak(\"${line.replace('___', answer)}\")">🔊</button>
+    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak('${line.replace('___', answer)}')">🔊</button>
     <div id='exp${i + 1}' class='explanation'>✅ ${line.replace('___', answer)}</div></div>`;
     container.innerHTML += html;
   }
