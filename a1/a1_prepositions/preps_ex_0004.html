@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice interactif : les prépositions temporelles</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice interactif : Prépositions temporelles – Choisissez la/les bonne(s) réponse(s)</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Il est parti ___ deux heures.", "il y a", "en", "dans", "depuis", ["il y a"], "Он уехал два часа назад."],
+  ["Nous partons ___ une heure.", "dans", "depuis", "il y a", "pendant", ["dans"], "Мы уезжаем через час."],
+  ["Elle travaille ici ___ 2010.", "depuis", "il y a", "en", "dans", ["depuis"], "Она работает здесь с 2010 года."],
+  ["Je vais finir ce travail ___ deux jours.", "en", "pendant", "dans", "depuis", ["en"], "Я закончу эту работу за два дня."],
+  ["Ils sont en vacances ___ une semaine.", "depuis", "il y a", "en", "dans", ["depuis"], "Они в отпуске уже неделю."],
+  ["___ combien de temps as-tu lu ce livre ?", "en", "dans", "depuis", "pour", ["en"], "За сколько времени ты прочитал эту книгу?"],
+  ["On a marché ___ deux heures.", "pendant", "en", "depuis", "dans", ["pendant"], "Мы шли два часа."],
+  ["Elle sera de retour ___ dix minutes.", "dans", "en", "depuis", "pendant", ["dans"], "Она вернётся через десять минут."],
+  ["Il est ici ___ ce matin.", "depuis", "en", "pendant", "dans", ["depuis"], "Он здесь с утра."],
+  ["J’ai appris le français ___ un an.", "en", "pendant", "depuis", "il y a", ["en", "pendant"], "Я выучил французский за год."],
+  ["___ combien de temps vas-tu rester ?", "pendant", "pour", "depuis", "dans", ["pendant", "pour"], "На сколько ты останешься?"],
+  ["Elle est arrivée ___ cinq minutes.", "il y a", "en", "depuis", "dans", ["il y a"], "Она приехала пять минут назад."],
+  ["Il est parti ___ le week-end.", "pendant", "en", "dans", "depuis", ["pendant"], "Он уехал на выходные."],
+  ["___ combien de temps peut-on visiter le musée ?", "pendant", "en", "depuis", "dans", ["pendant"], "Сколько времени можно посещать музей?"],
+  ["Je suis resté là ___ trois heures.", "pendant", "en", "depuis", "dans", ["pendant"], "Я пробыл там три часа."],
+  ["Elle a terminé ___ deux semaines.", "en", "pendant", "depuis", "dans", ["en"], "Она закончила за две недели."],
+  ["On a habité à Paris ___ trois ans.", "pendant", "en", "dans", "depuis", ["pendant"], "Мы жили в Париже три года."],
+  ["Je pars ___ cinq jours.", "dans", "pour", "depuis", "pendant", ["dans", "pour"], "Я уезжаю через пять дней."],
+  ["Il est là ___ longtemps ?", "depuis", "en", "dans", "pendant", ["depuis"], "Он здесь уже давно?"],
+  ["Elle revient ___ deux heures.", "dans", "en", "pour", "depuis", ["dans"], "Она вернётся через два часа."]
+];
+
+const correctAnswers = {};
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  container.innerHTML = "";
+  for (let i = 0; i < data.length; i++) {
+    const [text, opt1, opt2, opt3, opt4, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+    correctAnswers[qId] = correct;
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    [opt1, opt2, opt3, opt4].forEach(opt => {
+      html += `<label><input type="checkbox" name="${qId}" value="${opt}"> ${opt}</label><br>`;
+    });
+    html += `<div class="explanation" id="exp${i + 1}" style="display:none;">✅ ${correct.join(" / ")}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let totalCorrect = 0;
+  let totalSelectedCorrect = 0;
+
+  for (let i = 1; i <= data.length; i++) {
+    const qName = "q" + i;
+    const checkboxes = document.querySelectorAll(`input[name='${qName}']`);
+    const correctSet = new Set(correctAnswers[qName]);
+
+    checkboxes.forEach(cb => {
+      cb.parentElement.classList.remove("correct", "missed");
+      if (cb.checked && correctSet.has(cb.value)) {
+        totalSelectedCorrect++;
+        cb.parentElement.classList.add("correct");
+      } else if (!cb.checked && correctSet.has(cb.value)) {
+        cb.parentElement.classList.add("missed");
+      }
+    });
+
+    totalCorrect += correctSet.size;
+    document.getElementById("exp" + i).style.display = "block";
+  }
+
+  document.getElementById("summary").innerText =
+    `Vous avez sélectionné ${totalSelectedCorrect} bonne(s) réponse(s) sur ${totalCorrect} possibles.`;
+  document.getElementById("summary").style.display = "block";
+}
+
+function resetQuiz() {
+  const inputs = document.querySelectorAll("input[type='checkbox']");
+  inputs.forEach(input => input.checked = false);
+
+  const labels = document.querySelectorAll("label");
+  labels.forEach(label => label.classList.remove("correct", "missed"));
+
+  for (let i = 1; i <= data.length; i++) {
+    document.getElementById("exp" + i).style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice interactif : les prépositions à, en, dans</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice interactif : Choisissez le(s) bon(s) préposition(s)</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Il habite ___ Paris.", "à", "dans", "en", "par", ["à"], "Он живёт в Париже."],
+  ["Nous sommes ___ la salle d'attente.", "dans", "en", "à", "sur", ["dans"], "Мы в зале ожидания."],
+  ["Elle travaille ___ France.", "en", "à", "dans", "chez", ["en"], "Она работает во Франции."],
+  ["Je vais ___ l'université.", "à", "dans", "chez", "par", ["à", "dans"], "Я иду в университет."],
+  ["Ils vivent ___ une maison en bois.", "dans", "en", "à", "par", ["dans"], "Они живут в деревянном доме."],
+  ["On va ___ la campagne ce week-end.", "à", "dans", "en", "chez", ["à"], "Мы едем за город в выходные."],
+  ["Elle est restée ___ l'hôtel toute la journée.", "à", "dans", "en", "sur", ["à", "dans"], "Она весь день провела в гостинице."],
+  ["Tu étudies ___ Italie ?", "en", "à", "dans", "par", ["en"], "Ты учишься в Италии?"],
+  ["Il est ___ l'administration depuis 10 ans.", "dans", "à", "chez", "en", ["dans"], "Он работает в администрации 10 лет."],
+  ["On part ___ la montagne demain matin.", "à", "en", "dans", "chez", ["à", "en"], "Завтра утром мы уезжаем в горы."],
+  ["Elle est retournée ___ la bibliothèque.", "à", "dans", "en", "chez", ["à", "dans"], "Она вернулась в библиотеку."],
+  ["Nous logeons ___ un petit appartement.", "dans", "en", "à", "chez", ["dans"], "Мы живём в маленькой квартире."],
+  ["Il est né ___ Espagne.", "en", "à", "dans", "chez", ["en"], "Он родился в Испании."],
+  ["Ils habitent ___ une rue tranquille.", "dans", "à", "en", "chez", ["dans"], "Они живут на спокойной улице."],
+  ["Je suis ___ café du coin.", "au", "dans", "à", "en", ["au", "dans"], "Я в кафе на углу."],
+  ["Nous avons déjeuné ___ la terrasse.", "sur", "dans", "en", "à", ["sur"], "Мы обедали на террасе."],
+  ["Il travaille ___ une entreprise internationale.", "dans", "en", "chez", "à", ["dans", "chez"], "Он работает в международной компании."],
+  ["Je suis né ___ Lyon.", "à", "dans", "en", "chez", ["à"], "Я родился в Лионе."],
+  ["Ils vont ___ la mairie pour se marier.", "à", "dans", "chez", "en", ["à"], "Они идут в мэрию, чтобы пожениться."],
+  ["Elle attend ___ la réception.", "à", "en", "dans", "chez", ["à", "dans"], "Она ждёт у стойки регистрации."]
+];
+
+const correctAnswers = {};
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  container.innerHTML = "";
+  for (let i = 0; i < data.length; i++) {
+    const [text, opt1, opt2, opt3, opt4, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+    correctAnswers[qId] = correct;
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    [opt1, opt2, opt3, opt4].forEach(opt => {
+      html += `<label><input type="checkbox" name="${qId}" value="${opt}"> ${opt}</label><br>`;
+    });
+    html += `<div class="explanation" id="exp${i + 1}" style="display:none;">✅ ${correct.join(" / ")}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let totalCorrect = 0;
+  let totalSelectedCorrect = 0;
+
+  for (let i = 1; i <= data.length; i++) {
+    const qName = "q" + i;
+    const checkboxes = document.querySelectorAll(`input[name='${qName}']`);
+    const correctSet = new Set(correctAnswers[qName]);
+
+    checkboxes.forEach(cb => {
+      cb.parentElement.classList.remove("correct", "missed");
+      if (cb.checked && correctSet.has(cb.value)) {
+        totalSelectedCorrect++;
+        cb.parentElement.classList.add("correct");
+      } else if (!cb.checked && correctSet.has(cb.value)) {
+        cb.parentElement.classList.add("missed");
+      }
+    });
+
+    totalCorrect += correctSet.size;
+    document.getElementById("exp" + i).style.display = "block";
+  }
+
+  document.getElementById("summary").innerText =
+    `Vous avez sélectionné ${totalSelectedCorrect} bonne(s) réponse(s) sur ${totalCorrect} possibles.`;
+  document.getElementById("summary").style.display = "block";
+}
+
+function resetQuiz() {
+  const inputs = document.querySelectorAll("input[type='checkbox']");
+  inputs.forEach(input => input.checked = false);
+
+  const labels = document.querySelectorAll("label");
+  labels.forEach(label => label.classList.remove("correct", "missed"));
+
+  for (let i = 1; i <= data.length; i++) {
+    document.getElementById("exp" + i).style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+</body>
+</html>
