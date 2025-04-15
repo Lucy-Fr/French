@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (3) — dialogues + audio</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    select { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 3</h2>
+<p>Voici une liste d'expressions françaises familières avec leur traduction en russe et une explication grammaticale :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Объяснение</th></tr>
+  <tr><td>J’y crois pas</td><td>Не верю / Не могу поверить</td><td>«y croire» в отрицании, разговорный стиль</td></tr>
+  <tr><td>On y va ?</td><td>Пошли? / Пойдём?</td><td>Инверсия с «on» и глаголом «aller»</td></tr>
+  <tr><td>Ça me va</td><td>Мне подходит</td><td>Выражение с местоимением «me» и глаголом «aller»</td></tr>
+  <tr><td>Ça m’est égal</td><td>Мне всё равно</td><td>Конструкция с «être égal à» + местоимение</td></tr>
+  <tr><td>Il faut que je file</td><td>Мне пора идти</td><td>Subjonctif après «il faut que» + глагол «filer»</td></tr>
+  <tr><td>J’en sais rien</td><td>Я ничего не знаю</td><td>Разговорное отрицание «je ne sais rien» с «en»</td></tr>
+  <tr><td>À la prochaine</td><td>До следующей встречи</td><td>Сокращённая фраза: «À la prochaine fois»</td></tr>
+  <tr><td>Ça te dit ?</td><td>Хочешь? / Тебе это интересно?</td><td>Выражение «ça te dit» — пригласительное</td></tr>
+  <tr><td>Tu rigoles ?</td><td>Ты шутишь?</td><td>Разговорная форма глагола «rigoler» (1-я группа)</td></tr>
+  <tr><td>Je rêve !</td><td>Я в шоке! / Я не верю!</td><td>Удивление, с глаголом «rêver» в настоящем времени</td></tr>
+</table>
+
+<h3>🧩 Exercice — Choisissez l'expression correcte</h3>
+<p>Complétez chaque dialogue avec la bonne expression. Cliquez sur 🔊 pour écouter le dialogue entier.</p>
+
+<div id="exercise-container"></div>
+
+<p id="score"></p>
+<button onclick="checkAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "J’y crois pas", "On y va ?", "Ça me va", "Ça m’est égal",
+  "Il faut que je file", "J’en sais rien", "À la prochaine",
+  "Ça te dit ?", "Tu rigoles ?", "Je rêve !"
+];
+
+const dialogues = [
+  {
+    full: "— Tu sais quoi ? Il a mangé 12 hamburgers ! — J’y crois pas.",
+    withGap: "— Tu sais quoi ? Il a mangé 12 hamburgers ! — ___",
+    answer: "J’y crois pas"
+  },
+  {
+    full: "— On a tout rangé, on y va ? — Oui, je suis prêt.",
+    withGap: "— On a tout rangé, ___ — Oui, je suis prêt.",
+    answer: "On y va ?"
+  },
+  {
+    full: "— On se retrouve à 19h devant le cinéma ? — Ça me va.",
+    withGap: "— On se retrouve à 19h devant le cinéma ? — ___",
+    answer: "Ça me va"
+  },
+  {
+    full: "— Tu préfères une glace ou un café ? — Ça m’est égal.",
+    withGap: "— Tu préfères une glace ou un café ? — ___",
+    answer: "Ça m’est égal"
+  },
+  {
+    full: "— Il est tard, je dois partir. — Oui, il faut que je file.",
+    withGap: "— Il est tard, je dois partir. — Oui, ___",
+    answer: "Il faut que je file"
+  },
+  {
+    full: "— Tu connais l’adresse ? — J’en sais rien.",
+    withGap: "— Tu connais l’adresse ? — ___",
+    answer: "J’en sais rien"
+  },
+  {
+    full: "— On se voit la semaine prochaine ? — Bien sûr, à la prochaine !",
+    withGap: "— On se voit la semaine prochaine ? — Bien sûr, ___",
+    answer: "À la prochaine"
+  },
+  {
+    full: "— On fait une partie de cartes ? — Ça te dit ?",
+    withGap: "— On fait une partie de cartes ? — ___",
+    answer: "Ça te dit ?"
+  },
+  {
+    full: "— J’ai perdu ton livre, désolé ! — Tu rigoles ?",
+    withGap: "— J’ai perdu ton livre, désolé ! — ___",
+    answer: "Tu rigoles ?"
+  },
+  {
+    full: "— Elle a dit qu’elle avait oublié ton anniversaire… — Je rêve !",
+    withGap: "— Elle a dit qu’elle avait oublié ton anniversaire… — ___",
+    answer: "Je rêve !"
+  }
+];
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercise() {
+  const container = document.getElementById("exercise-container");
+  dialogues.forEach((dlg, i) => {
+    const options = expressions.map(exp => `<option value="${exp}">${exp}</option>`).join("");
+    container.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊 Écouter</button><br>
+        ${dlg.withGap.replace("___", `<select id="q${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("q" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score").innerText = `Résultat : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercise;
+</script>
+
+</body>
+</html>
