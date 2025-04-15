@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Avoir au présent</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Conjuguez le verbe "avoir" au présent</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["J'___ un chat.", ["ai"], "У меня есть кот."],
+  ["Tu ___ une voiture.", ["as"], "У тебя есть машина."],
+  ["Il ___ une idée.", ["a"], "У него есть идея."],
+  ["Elle ___ un problème.", ["a"], "У неё есть проблема."],
+  ["Nous ___ des amis ici.", ["avons"], "У нас здесь есть друзья."],
+  ["Vous ___ une maison ?", ["avez"], "У вас есть дом?"],
+  ["Ils ___ une question.", ["ont"], "У них есть вопрос."],
+  ["Elles ___ deux enfants.", ["ont"], "У них двое детей (жен. род)."],
+  ["J'___ froid.", ["ai"], "Мне холодно."],
+  ["Tu ___ raison.", ["as"], "Ты прав."],
+  ["Il ___ un livre intéressant.", ["a"], "У него интересная книга."],
+  ["Elle ___ une belle voix.", ["a"], "У неё красивый голос."],
+  ["Nous ___ une réunion demain.", ["avons"], "У нас завтра встреча."],
+  ["Vous ___ de la chance.", ["avez"], "Вам повезло."],
+  ["Ils ___ du temps libre.", ["ont"], "У них есть свободное время."],
+  ["Elles ___ peur.", ["ont"], "Они боятся."],
+  ["J'___ mal à la tête.", ["ai"], "У меня болит голова."],
+  ["Tu ___ un problème ?", ["as"], "У тебя проблема?"],
+  ["Il ___ un chien.", ["a"], "У него есть собака."],
+  ["Elle ___ une idée géniale.", ["a"], "У неё отличная идея."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct[0]}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1][0];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const userAnswer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (userAnswer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Aller au présent</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Conjuguez le verbe "aller" au présent</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ à l'école.", ["vais"], "Я иду в школу."],
+  ["Tu ___ au travail.", ["vas"], "Ты идёшь на работу."],
+  ["Il ___ au marché.", ["va"], "Он идёт на рынок."],
+  ["Elle ___ à la boulangerie.", ["va"], "Она идёт в булочную."],
+  ["Nous ___ à la piscine.", ["allons"], "Мы идём в бассейн."],
+  ["Vous ___ à la gare ?", ["allez"], "Вы идёте на вокзал?"],
+  ["Ils ___ à la mer.", ["vont"], "Они едут к морю."],
+  ["Elles ___ chez leurs parents.", ["vont"], "Они идут к родителям (жен. род)."],
+  ["Je ___ bien, merci.", ["vais"], "У меня всё хорошо, спасибо."],
+  ["Tu ___ où ?", ["vas"], "Куда ты идёшь?"],
+  ["Il ___ en France.", ["va"], "Он едет во Францию."],
+  ["Elle ___ à la maison.", ["va"], "Она идёт домой."],
+  ["Nous ___ faire les courses.", ["allons"], "Мы идём за покупками."],
+  ["Vous ___ prendre un café ?", ["allez"], "Вы собираетесь выпить кофе?"],
+  ["Ils ___ sortir ce soir.", ["vont"], "Они собираются выйти сегодня вечером."],
+  ["Elles ___ au cinéma.", ["vont"], "Они идут в кино (жен. род)."],
+  ["Je ___ partir bientôt.", ["vais"], "Я скоро уезжаю."],
+  ["Tu ___ avec moi ?", ["vas"], "Ты идёшь со мной?"],
+  ["Il ___ à la campagne demain.", ["va"], "Он едет за город завтра."],
+  ["Elle ___ bien ?", ["va"], "У неё всё хорошо?"],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct[0]}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1][0];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const userAnswer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (userAnswer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

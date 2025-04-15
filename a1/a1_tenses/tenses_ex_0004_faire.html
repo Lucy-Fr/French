@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Faire au présent</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Conjuguez le verbe "faire" au présent</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ du sport.", ["fais"], "Я занимаюсь спортом."],
+  ["Tu ___ la cuisine.", ["fais"], "Ты готовишь еду."],
+  ["Il ___ ses devoirs.", ["fait"], "Он делает домашнее задание."],
+  ["Elle ___ une promenade.", ["fait"], "Она гуляет."],
+  ["Nous ___ un gâteau.", ["faisons"], "Мы готовим торт."],
+  ["Vous ___ du yoga ?", ["faites"], "Вы занимаетесь йогой?"],
+  ["Ils ___ une fête.", ["font"], "Они устраивают праздник."],
+  ["Elles ___ du shopping.", ["font"], "Они ходят по магазинам (жен. род)."],
+  ["Je ___ le ménage.", ["fais"], "Я убираюсь дома."],
+  ["Tu ___ du vélo.", ["fais"], "Ты катаешься на велосипеде."],
+  ["Il ___ la lessive.", ["fait"], "Он стирает."],
+  ["Elle ___ un dessin.", ["fait"], "Она рисует."],
+  ["Nous ___ nos valises.", ["faisons"], "Мы собираем чемоданы."],
+  ["Vous ___ toujours attention.", ["faites"], "Вы всегда внимательны."],
+  ["Ils ___ du bruit.", ["font"], "Они шумят."],
+  ["Elles ___ une pause.", ["font"], "Они делают перерыв (жен. род)."],
+  ["Je ___ une erreur.", ["fais"], "Я делаю ошибку."],
+  ["Tu ___ une blague ?", ["fais"], "Ты шутишь?"],
+  ["Il ___ un voyage.", ["fait"], "Он путешествует."],
+  ["Elle ___ du ski.", ["fait"], "Она катается на лыжах."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct[0]}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1][0];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const userAnswer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (userAnswer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
