@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (2) — écoute + dialogues</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    select { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 2</h2>
+<p>Voici une liste d'expressions françaises familières avec leur traduction en russe et une explication grammaticale :</p>
+
+<table>
+  <tr>
+    <th>Expression</th>
+    <th>Перевод</th>
+    <th>Объяснение</th>
+  </tr>
+  <tr><td>Tu m’étonnes !</td><td>Ну ты даёшь! / Неудивительно!</td><td>Глагол «étonner» во 2-м лице, разговорное подтверждение удивления</td></tr>
+  <tr><td>Je n’en peux plus</td><td>Я больше не могу / Устал</td><td>Отрицание с «en pouvoir» — выражает усталость, предел</td></tr>
+  <tr><td>Tant mieux</td><td>Тем лучше</td><td>Наречие «tant» + сравнительная форма «mieux»</td></tr>
+  <tr><td>T’inquiète</td><td>Не переживай</td><td>Императив глагола «s’inquiéter» с местоимением «tu»</td></tr>
+  <tr><td>À tout à l’heure</td><td>До скорого (в течение дня)</td><td>Устойч. выражение с предлогом «à» + указание времени</td></tr>
+  <tr><td>Pas mal</td><td>Неплохо</td><td>Отрицательная конструкция без глагола, ироническое значение</td></tr>
+  <tr><td>C’est pas grave</td><td>Ничего страшного</td><td>Разговорная форма от «ce n’est pas grave» — отрицание</td></tr>
+  <tr><td>Comme tu veux</td><td>Как хочешь</td><td>«Comme» + 2-е лицо глагола «vouloir»</td></tr>
+  <tr><td>J’en ai marre</td><td>Мне это надоело</td><td>Идиома с «en avoir marre» — выражение раздражения</td></tr>
+  <tr><td>Ça dépend</td><td>Зависит от обстоятельств</td><td>3-е лицо ед. ч. глагола «dépendre»</td></tr>
+</table>
+
+<h3>🧩 Partie 1 — Complétez les mini-dialogues</h3>
+<div id="dialogue-fill"></div>
+<p id="fill-score"></p>
+
+<h3>🎧 Partie 2 — Exercice à l’écoute</h3>
+<p>Cliquez sur 🔊 pour écouter, puis choisissez la bonne réponse.</p>
+<div id="audio-exercise"></div>
+<p id="audio-score"></p>
+
+<button onclick="checkFill(); checkAudioAnswers();">Vérifier tout</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressionsList = [
+  "Tu m’étonnes !", "Je n’en peux plus", "Tant mieux", "T’inquiète",
+  "À tout à l’heure", "Pas mal", "C’est pas grave", "Comme tu veux",
+  "J’en ai marre", "Ça dépend"
+];
+
+const miniDialogues = [
+  ["— Tu veux sortir ce soir ?<br>— ___", "Comme tu veux"],
+  ["— Je suis crevé, j’ai bossé toute la journée !<br>— ___", "Je n’en peux plus"],
+  ["— On a gagné le concours !<br>— ___", "Tant mieux"],
+  ["— Tu n’as pas encore mangé ?<br>— ___", "J’en ai marre"],
+  ["— Je ne pourrai pas venir ce soir.<br>— ___", "C’est pas grave"],
+  ["— On se voit à 17h devant la gare.<br>— ___", "À tout à l’heure"],
+  ["— Ce film était pas mal, non ?<br>— ___", "Pas mal"],
+  ["— J’ai raté mon bus, encore une fois !<br>— ___", "Tu m’étonnes !"],
+  ["— Il va pleuvoir demain ?<br>— ___", "Ça dépend"],
+  ["— Je suis un peu stressé pour l’examen...<br>— ___", "T’inquiète"]
+];
+
+const audioQuestions = [
+  ["Tu m’étonnes !", ["Tu m’étonnes !", "Pas de problème", "C’est pas grave"]],
+  ["Je n’en peux plus", ["Pas mal", "T’inquiète", "Je n’en peux plus"]],
+  ["Tant mieux", ["Tant mieux", "Pas mal", "J’en ai marre"]],
+  ["T’inquiète", ["Tu m’étonnes !", "T’inquiète", "Comme tu veux"]],
+  ["À tout à l’heure", ["À bientôt", "À tout à l’heure", "Salut"]],
+  ["Pas mal", ["Pas mal", "Pas du tout", "Tant mieux"]],
+  ["C’est pas grave", ["Ce n’est pas grave", "Je n’en peux plus", "Ça dépend"]],
+  ["Comme tu veux", ["Comme tu veux", "Tu m’étonnes !", "Pas mal"]],
+  ["J’en ai marre", ["T’inquiète", "J’en ai marre", "Tant mieux"]],
+  ["Ça dépend", ["Ça va", "Ça dépend", "D’accord"]];
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) u.voice = fr;
+  speechSynthesis.speak(u);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderDialogueFill() {
+  const container = document.getElementById("dialogue-fill");
+  miniDialogues.forEach(([text, correct], i) => {
+    const id = `fill${i}`;
+    const options = expressionsList.map(e => `<option>${e}</option>`).join("");
+    container.innerHTML += `<div class="question">${text.replace("___", `<select id="${id}"><option value="">—</option>${options}</select>`)}</div>`;
+  });
+}
+
+function renderAudioExercise() {
+  const container = document.getElementById("audio-exercise");
+  audioQuestions.forEach(([correct, options], i) => {
+    const id = `q${i}`;
+    let html = `<div class="question">
+      <button onclick="speak('${correct}')">🔊 Écouter</button>
+      <select id="${id}">
+        <option value="">— Choisissez —</option>`;
+    options.forEach(opt => {
+      html += `<option value="${opt}">${opt}</option>`;
+    });
+    html += `</select> <div class="explanation" id="exp${id}">✅ ${correct}</div></div>`;
+    container.innerHTML += html;
+  });
+}
+
+function checkFill() {
+  let score = 0;
+  miniDialogues.forEach(([, correct], i) => {
+    const sel = document.getElementById("fill" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === correct) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("fill-score").innerText = `Mini-dialogues : ${score} / ${miniDialogues.length}`;
+}
+
+function checkAudioAnswers() {
+  let score = 0;
+  audioQuestions.forEach(([correct], i) => {
+    const sel = document.getElementById("q" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === correct) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("audio-score").innerText = `Écoute : ${score} / ${audioQuestions.length}`;
+}
+
+window.onload = function() {
+  renderDialogueFill();
+  renderAudioExercise();
+};
+</script>
+
+</body>
+</html>
