@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Présent ou Futur Proche</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Présent ou Futur proche</h2>
+<p>Choisissez la bonne forme du verbe (au présent ou futur proche).</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ à la maison ce soir.", "vais rester", "Я останусь дома этим вечером."],
+  ["Tu ___ souvent avec nous.", "viens", "Ты часто приходишь с нами."],
+  ["Il ___ un gâteau pour l’anniversaire.", "va préparer", "Он собирается приготовить торт на день рождения."],
+  ["Nous ___ le bus tous les matins.", "prenons", "Мы садимся на автобус каждое утро."],
+  ["Vous ___ au musée demain ?", "allez aller", "Вы собираетесь пойти в музей завтра?"],
+  ["Elles ___ leurs devoirs maintenant.", "font", "Они делают свою домашнюю работу сейчас."],
+  ["Je ___ te téléphoner ce soir.", "vais", "Я позвоню тебе этим вечером."],
+  ["Tu ___ ton café sans sucre ?", "prends", "Ты пьёшь кофе без сахара?"],
+  ["Il ___ bientôt à Paris.", "va revenir", "Он скоро вернётся в Париж."],
+  ["Nous ___ une promenade après le dîner.", "allons faire", "Мы собираемся прогуляться после ужина."],
+  ["Vous ___ toujours très vite.", "parlez", "Вы всегда говорите очень быстро."],
+  ["Elles ___ visiter la cathédrale demain.", "vont", "Они собираются посетить собор завтра."],
+  ["Je ___ à la boulangerie chaque matin.", "vais", "Я хожу в булочную каждое утро."],
+  ["Tu ___ un nouveau livre ce week-end ?", "vas lire", "Ты собираешься прочитать новую книгу на этих выходных?"],
+  ["Il ___ souvent ses clés.", "perd", "Он часто теряет свои ключи."],
+  ["Nous ___ en vacances bientôt.", "allons partir", "Мы скоро уедем в отпуск."],
+  ["Vous ___ du thé ou du café ?", "prenez", "Вы берёте чай или кофе?"],
+  ["Ils ___ au cinéma ce soir.", "vont aller", "Они собираются пойти в кино сегодня вечером."],
+  ["Elle ___ très bien espagnol.", "parle", "Она очень хорошо говорит по-испански."],
+  ["On ___ finir ce travail demain.", "va", "Мы собираемся закончить эту работу завтра."],
+];
+
+const options = [
+  "vais", "vas", "va", "allons", "allez", "vont",
+  "reste", "vais rester", "restez", "va rester",
+  "prépare", "va préparer", "préparer", "fait", "va faire", "feront",
+  "viens", "vient", "venir", "venez", "revenez", "va revenir",
+  "prends", "prenez", "va prendre", "vont prendre",
+  "fais", "font", "fait", "va faire", "feront", "allons faire",
+  "parle", "parlez", "parlons", "va parler", "vais parler",
+  "lis", "vas lire", "va lire", "lisez", "lisons",
+  "allons partir", "va partir", "partons", "partirez"
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<select id="${qId}"><option value="">-- choisissez --</option>`;
+    for (const opt of options) {
+      html += `<option value="${opt}">${opt}</option>`;
+    }
+    html += `</select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
