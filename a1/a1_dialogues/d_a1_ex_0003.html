@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dialogue : Au rayon traiteur — exercice à trous et grammaire</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    button { margin: 5px; }
+  </style>
+</head>
+<body>
+<h2>Dialogue : Au rayon traiteur — exercice à trous avec audio</h2>
+<p>Complétez les mots manquants dans ce dialogue. Cliquez sur 🔊 pour écouter chaque ligne.</p>
+
+<div id="dialogue-container"></div>
+
+<h3>Exercice de grammaire</h3>
+<p>Complétez avec la bonne forme du verbe <em>prendre</em> (présent) :</p>
+<ul>
+  <li>Je <input type="text" id="g1" placeholder="..."> un plat préparé pour ce soir.</li>
+  <li>Nous <input type="text" id="g2" placeholder="..."> deux parts de lasagnes.</li>
+  <li>Tu <input type="text" id="g3" placeholder="..."> aussi une salade composée ?</li>
+</ul>
+<button onclick="checkGrammar()">Vérifier la grammaire</button>
+<p id="grammar-score" class="result" style="display: none;"></p>
+
+<button onclick="checkAnswers()">Vérifier le dialogue</button>
+<button onclick="resetDialogue()">Réinitialiser</button>
+<p id="score" class="result" style="display: none;"></p>
+
+<script>
+const dialogue = [
+  ["Client", "Bonjour, je voudrais une part de ___, s’il vous plaît.", "quiche"],
+  ["Employé", "Bien sûr. Autre chose ?", ""],
+  ["Client", "Oui, deux tranches de ___, s’il vous plaît.", "pizza"],
+  ["Employé", "Avec plaisir. Et une salade de ___ ?", "pâtes"],
+  ["Client", "Oui, pourquoi pas. Et vous avez du ___ maison ?", "taboulé"],
+  ["Employé", "Oui, juste ici à côté du ___ de légumes.", "gratin"],
+  ["Client", "Je vais en prendre aussi. Ça fera combien ?", ""],
+  ["Employé", "Douze euros cinquante, s’il vous plaît.", ""],
+  ["Client", "Voici. Merci, bonne journée !", ""]
+];
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  speechSynthesis.speak(utterance);
+}
+
+function createDialogue() {
+  const container = document.getElementById("dialogue-container");
+  container.innerHTML = "";
+  for (let i = 0; i < dialogue.length; i++) {
+    const [speaker, line, answer] = dialogue[i];
+    const qId = `q${i + 1}`;
+    const hasBlank = line.includes("___");
+    let inputField = "";
+    if (hasBlank) {
+      inputField = `<input type='text' id='${qId}' placeholder='...'>`;
+    }
+    const displayLine = line.replace("___", inputField);
+    const html = `<div class='question'><strong>${speaker}:</strong> ${displayLine} <button onclick="speak(\"${line.replace('___', answer)}\")">🔊</button>
+    <div id='exp${i + 1}' class='explanation'>✅ ${line.replace('___', answer)}</div></div>`;
+    container.innerHTML += html;
+  }
+}
+
+function checkAnswers() {
+  let score = 0;
+  let total = 0;
+  for (let i = 0; i < dialogue.length; i++) {
+    const [_, line, answer] = dialogue[i];
+    const qId = `q${i + 1}`;
+    const exp = document.getElementById("exp" + (i + 1));
+    const input = document.getElementById(qId);
+    if (input) {
+      total++;
+      const val = input.value.trim().toLowerCase();
+      input.classList.remove("correct", "missed");
+      if (val === answer.toLowerCase()) {
+        input.classList.add("correct");
+        score++;
+      } else {
+        input.classList.add("missed");
+      }
+      exp.style.display = "block";
+    }
+  }
+  const scoreText = document.getElementById("score");
+  scoreText.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  scoreText.style.display = "block";
+}
+
+function resetDialogue() {
+  for (let i = 0; i < dialogue.length; i++) {
+    const qId = `q${i + 1}`;
+    const exp = document.getElementById("exp" + (i + 1));
+    const input = document.getElementById(qId);
+    if (input) {
+      input.value = "";
+      input.classList.remove("correct", "missed");
+    }
+    if (exp) exp.style.display = "none";
+  }
+  document.getElementById("score").style.display = "none";
+  document.getElementById("grammar-score").style.display = "none";
+  document.getElementById("g1").value = "";
+  document.getElementById("g2").value = "";
+  document.getElementById("g3").value = "";
+}
+
+function checkGrammar() {
+  const g1 = document.getElementById("g1").value.trim().toLowerCase();
+  const g2 = document.getElementById("g2").value.trim().toLowerCase();
+  const g3 = document.getElementById("g3").value.trim().toLowerCase();
+  let score = 0;
+  if (g1 === "prends") score++;
+  if (g2 === "prenons") score++;
+  if (g3 === "prends") score++;
+  document.getElementById("grammar-score").innerText = `Grammaire : ${score}/3 bonne(s) réponse(s).`;
+  document.getElementById("grammar-score").style.display = "block";
+}
+
+window.onload = createDialogue;
+</script>
+
+<p>
+  <a href="../a1_dialogues.html">← Retour aux dialogues</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+</body>
+</html>
