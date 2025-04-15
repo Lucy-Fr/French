@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Futur simple — Le verbe "parler"</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Futur simple — Le verbe "parler"</h2>
+<p>Écrivez la bonne forme du verbe "parler" au futur simple.</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Demain, je ___ avec mon professeur.", "parlerai", "Завтра я поговорю с моим преподавателем."],
+  ["Tu ___ à ta sœur plus tard.", "parleras", "Ты поговоришь со своей сестрой позже."],
+  ["Il ___ devant toute la classe.", "parlera", "Он будет говорить перед всем классом."],
+  ["Nous ___ de ce projet demain.", "parlerons", "Мы поговорим об этом проекте завтра."],
+  ["Vous ___ avec le directeur lundi.", "parlerez", "Вы поговорите с директором в понедельник."],
+  ["Elles ___ en français pendant le voyage.", "parleront", "Они будут говорить по-французски во время поездки."],
+  ["Est-ce que tu ___ à Marie ce soir ?", "parleras", "Ты поговоришь с Мари сегодня вечером?"],
+  ["Je ___ au téléphone tout à l’heure.", "parlerai", "Я поговорю по телефону через минуту."],
+  ["Il ___ aux journalistes après la réunion.", "parlera", "Он будет говорить с журналистами после собрания."],
+  ["Nous ___ tous ensemble à la fin.", "parlerons", "Мы все поговорим вместе в конце."],
+  ["Vous ___ à votre mère ce week-end ?", "parlerez", "Вы поговорите с мамой на выходных?"],
+  ["Elles ___ de leurs vacances.", "parleront", "Они будут говорить о своих каникулах."],
+  ["Tu ___ plus clairement, s’il te plaît ?", "parleras", "Ты будешь говорить яснее, пожалуйста?"],
+  ["Je ___ avec lui demain matin.", "parlerai", "Я поговорю с ним завтра утром."],
+  ["Ils ___ lentement pour qu’on comprenne.", "parleront", "Они будут говорить медленно, чтобы мы поняли."],
+  ["On ___ de tout ça plus tard.", "parlera", "Мы об этом поговорим позже."],
+  ["Je pense qu’ils ___ avec leur professeur.", "parleront", "Я думаю, что они поговорят с преподавателем."],
+  ["Vous ___ aussi pendant la réunion ?", "parlerez", "Вы тоже будете говорить на собрании?"],
+  ["Elle ___ de ses projets d’avenir.", "parlera", "Она расскажет о своих планах на будущее."],
+  ["Nous ___ de cette question lundi.", "parlerons", "Мы обсудим этот вопрос в понедельник."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" placeholder="Votre réponse..." />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

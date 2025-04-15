@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Futur simple — Le verbe "venir"</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Futur simple — Le verbe "venir"</h2>
+<p>Écrivez la bonne forme du verbe "venir" au futur simple.</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ demain matin.", "viendrai", "Я приду завтра утром."],
+  ["Tu ___ à la réunion ?", "viendras", "Ты придёшь на собрание?"],
+  ["Il ___ avec son frère.", "viendra", "Он придёт со своим братом."],
+  ["Nous ___ tous ensemble.", "viendrons", "Мы придём все вместе."],
+  ["Vous ___ avec vos amis ?", "viendrez", "Вы придёте со своими друзьями?"],
+  ["Elles ___ ce soir à la fête.", "viendront", "Они придут на вечеринку сегодня вечером."],
+  ["Tu ___ aussi ?", "viendras", "Ты тоже придёшь?"],
+  ["Je ___ vers 18h.", "viendrai", "Я приду около 18:00."],
+  ["Il ___ dès qu’il pourra.", "viendra", "Он придёт, как только сможет."],
+  ["Nous ___ en voiture.", "viendrons", "Мы приедем на машине."],
+  ["Vous ___ demain midi ?", "viendrez", "Вы придёте завтра в полдень?"],
+  ["Elles ___ après le cours.", "viendront", "Они придут после урока."],
+  ["Je ___ avec plaisir.", "viendrai", "Я с удовольствием приду."],
+  ["Tu ___ si tu es libre.", "viendras", "Ты придёшь, если будешь свободен."],
+  ["Il ___ à la maison.", "viendra", "Он придёт домой."],
+  ["Nous ___ plus tard.", "viendrons", "Мы придём позже."],
+  ["Vous ___ à l’heure ?", "viendrez", "Вы придёте вовремя?"],
+  ["Ils ___ pour aider.", "viendront", "Они придут, чтобы помочь."],
+  ["Elle ___ aussi demain.", "viendra", "Она тоже придёт завтра."],
+  ["On ___ te voir demain.", "viendra", "Мы придём навестить тебя завтра."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" placeholder="Votre réponse..." />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>

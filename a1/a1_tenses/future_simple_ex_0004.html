@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Futur simple — Le verbe "faire"</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Futur simple — Le verbe "faire"</h2>
+<p>Écrivez la bonne forme du verbe "faire" au futur simple.</p>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ mes devoirs ce soir.", "ferai", "Я сделаю домашнее задание этим вечером."],
+  ["Tu ___ du sport demain matin.", "feras", "Ты позанимаешься спортом завтра утром."],
+  ["Il ___ une pause après le repas.", "fera", "Он сделает перерыв после еды."],
+  ["Nous ___ un gâteau ensemble.", "ferons", "Мы приготовим торт вместе."],
+  ["Vous ___ attention à vos affaires ?", "ferez", "Вы будете внимательны к своим вещам?"],
+  ["Elles ___ les courses ce week-end.", "feront", "Они сделают покупки в эти выходные."],
+  ["Je ___ une promenade ce soir.", "ferai", "Я прогуляюсь этим вечером."],
+  ["Tu ___ la cuisine ?", "feras", "Ты приготовишь еду?"],
+  ["Elle ___ tout son possible.", "fera", "Она сделает всё возможное."],
+  ["Nous ___ le ménage demain.", "ferons", "Мы сделаем уборку завтра."],
+  ["Vous ___ une erreur ?", "ferez", "Вы совершите ошибку?"],
+  ["Ils ___ une surprise à leur mère.", "feront", "Они устроят сюрприз своей маме."],
+  ["Je ___ de mon mieux.", "ferai", "Я сделаю всё возможное."],
+  ["Tu ___ le lit avant de partir.", "feras", "Ты заправишь кровать перед уходом."],
+  ["Il ___ chaud cet été.", "fera", "Летом будет жарко."],
+  ["Nous ___ un pique-nique dimanche.", "ferons", "Мы устроим пикник в воскресенье."],
+  ["Vous ___ un bon choix.", "ferez", "Вы сделаете хороший выбор."],
+  ["Elles ___ une pause à midi.", "feront", "Они сделают перерыв в полдень."],
+  ["Je ___ un dessin pour toi.", "ferai", "Я нарисую для тебя рисунок."],
+  ["On ___ une fête pour son anniversaire.", "fera", "Мы устроим вечеринку на его день рождения."],
+];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" placeholder="Votre réponse..." />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = input.value.trim().toLowerCase();
+
+    input.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const input = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    input.value = "";
+    input.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
