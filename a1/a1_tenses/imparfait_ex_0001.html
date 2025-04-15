@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Imparfait — choisir la bonne forme</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Imparfait — Choisissez la bonne forme</h2>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Quand j'étais petit, je ___ souvent malade.", "étais", "Когда я был маленьким, я часто болел."],
+  ["Tu ___ toujours en retard.", "étais", "Ты всегда опаздывал."],
+  ["Il ___ très gentil avec moi.", "était", "Он был очень добр ко мне."],
+  ["Elle ___ à l'école chaque jour.", "allait", "Она ходила в школу каждый день."],
+  ["Nous ___ au cinéma le samedi.", "allions", "Мы ходили в кино по субботам."],
+  ["Vous ___ des vacances en été ?", "preniez", "Вы брали отпуск летом?"],
+  ["Ils ___ toujours ensemble.", "étaient", "Они всегда были вместе."],
+  ["Elles ___ beaucoup de jouets.", "avaient", "У них было много игрушек."],
+  ["Je ___ du piano tous les jours.", "jouais", "Я играл на пианино каждый день."],
+  ["Tu ___ bien le français.", "parlais", "Ты хорошо говорил по-французски."],
+  ["Il ___ ses devoirs le soir.", "faisait", "Он делал домашнее задание вечером."],
+  ["Elle ___ très timide.", "était", "Она была очень застенчивой."],
+  ["Nous ___ un chien.", "avions", "У нас была собака."],
+  ["Vous ___ toujours heureux.", "étiez", "Вы всегда были счастливы."],
+  ["Ils ___ du sport le week-end.", "faisaient", "Они занимались спортом по выходным."],
+  ["Elles ___ souvent des histoires drôles.", "racontaient", "Они часто рассказывали смешные истории."],
+  ["Je ___ dans un petit village.", "vivais", "Я жил в маленькой деревне."],
+  ["Tu ___ les vacances chez tes grands-parents.", "passais", "Ты проводил каникулы у бабушки с дедушкой."],
+  ["Il ___ toujours en noir.", "s'habillait", "Он всегда одевался в чёрное."],
+  ["Elle ___ souvent à la mer.", "allait", "Она часто ездила к морю."],
+];
+
+const options = ["étais", "était", "étions", "étiez", "étaient", "avais", "avait", "avions", "aviez", "avaient", "faisais", "faisait", "faisions", "faisiez", "faisaient", "jouais", "parlais", "allait", "allions", "preniez", "racontaient", "vivais", "passais", "s'habillait"];
+
+const container = document.getElementById("questions-container");
+
+function createQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation] = data[i];
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<select id="${qId}">
+               <option value="">-- choisissez --</option>
+               ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+             </select>`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function showAnswers() {
+  let total = data.length;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const correct = data[i][1];
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    const answer = select.value;
+
+    select.classList.remove("correct", "missed");
+
+    if (answer === correct) {
+      select.classList.add("correct");
+      score++;
+    } else {
+      select.classList.add("missed");
+    }
+
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const select = document.getElementById("q" + (i + 1));
+    const exp = document.getElementById("exp" + (i + 1));
+    select.value = "";
+    select.classList.remove("correct", "missed");
+    exp.style.display = "none";
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
