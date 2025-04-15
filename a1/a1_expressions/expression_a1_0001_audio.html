@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice à l’écoute — Expressions fréquentes</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { display: none; color: green; margin-top: 5px; }
+    select { padding: 5px; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+
+<h2>🎧 Exercice : Comprendre des expressions à l’écoute</h2>
+<p>Cliquez sur 🔊 pour écouter la phrase, puis choisissez la bonne réponse. Le texte n’est pas affiché.</p>
+
+<div id="audio-exercise"></div>
+
+<button onclick="checkAudioAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p id="audio-score"></p>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const questions = [
+  ["Ça va, merci", ["Pas de problème", "Ça va, merci", "Pas du tout"]],
+  ["Bien sûr", ["D’accord", "Bien sûr", "De rien"]],
+  ["Pas de problème", ["Pas du tout", "Pas de problème", "Je suis désolé"]],
+  ["Je ne sais pas", ["Je ne sais pas", "Ce n’est pas grave", "Merci"]],
+  ["Ce n’est pas grave", ["Je suis désolé", "Ce n’est pas grave", "Ça va"]],
+  ["De rien", ["Merci", "Pas du tout", "De rien"]],
+  ["Pas du tout", ["Pas du tout", "Bien sûr", "À bientôt"]],
+  ["D’accord", ["D’accord", "Je ne sais pas", "Ce n’est pas grave"]],
+  ["À bientôt", ["À bientôt", "Bonjour", "Merci"]],
+  ["Je suis désolé", ["Je suis désolé", "Je ne sais pas", "Pas de problème"]]
+];
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) u.voice = fr;
+  speechSynthesis.speak(u);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderAudioExercise() {
+  const container = document.getElementById("audio-exercise");
+  questions.forEach(([correct, options], i) => {
+    const id = `q${i}`;
+    let html = `<div class="question">
+      <button onclick="speak('${correct}')">🔊 Écouter</button>
+      <select id="${id}">
+        <option value="">— Choisissez une réponse —</option>`;
+    options.forEach(opt => {
+      html += `<option value="${opt}">${opt}</option>`;
+    });
+    html += `</select>
+      <div class="explanation" id="exp${id}">✅ ${correct}</div>
+    </div>`;
+    container.innerHTML += html;
+  });
+}
+
+function checkAudioAnswers() {
+  let score = 0;
+  questions.forEach(([correct], i) => {
+    const sel = document.getElementById("q" + i);
+    const exp = document.getElementById("expq" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === correct) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+    document.getElementById("expq" + i)?.style?.setProperty("display", "block");
+  });
+  document.getElementById("audio-score").innerText = `Résultat : ${score} / ${questions.length}`;
+}
+
+window.onload = renderAudioExercise;
+</script>
+
+</body>
+</html>

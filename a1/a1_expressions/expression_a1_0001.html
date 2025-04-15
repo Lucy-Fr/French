@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes — Exercice interactif</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .explanation { display: none; color: green; margin-top: 5px; }
+    button { margin: 10px 5px; }
+    input { padding: 3px; }
+    select { padding: 3px; }
+  </style>
+</head>
+<body>
+
+<h2>🗣 Expressions courantes — Exercices interactifs</h2>
+<p>Complétez les phrases ou choisissez la bonne réponse. Cliquez sur 🔊 pour écouter.</p>
+
+<h3>💬 Partie 1 — Complétez avec une expression</h3>
+<div id="fill-expressions"></div>
+<button onclick="checkFill()">Vérifier</button>
+<p id="fill-score"></p>
+
+<h3>🗨️ Partie 2 — Choisissez la bonne réplique</h3>
+<div id="dialogue-expressions"></div>
+<button onclick="checkDialogues()">Vérifier</button>
+<p id="dialogue-score"></p>
+
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  ["– Tu vas bien ? — ___", "Ça va, merci"],
+  ["— Je suis désolé. — ___", "Ce n’est pas grave"],
+  ["— Tu viens avec nous ? — ___", "Bien sûr"],
+  ["— Merci beaucoup ! — ___", "De rien"],
+  ["— On se voit demain ? — ___", "D’accord"],
+  ["— Tu as compris ? — ___", "Pas du tout"],
+  ["— Il est là ? — ___", "Je ne sais pas"],
+  ["— Ça marche pour toi ? — ___", "Oui, ça marche"],
+  ["— Tu peux m’aider ? — ___", "Pas de problème"],
+  ["— À bientôt ! — ___", "À bientôt"]
+];
+
+const dialogues = [
+  ["— Tu veux un café ?", ["Non, merci", "Je suis désolé", "À demain"], "Non, merci"],
+  ["— Merci pour ton aide !", ["De rien", "Pas de problème", "Ça va"], "De rien"],
+  ["— Tu vas bien ?", ["Pas du tout", "Ça va, merci", "D’accord"], "Ça va, merci"],
+  ["— Je ne comprends rien !", ["Pas du tout", "Pas de problème", "Je ne sais pas"], "Pas du tout"],
+  ["— On y va ?", ["Je suis désolé", "Ça marche", "Non, merci"], "Ça marche"],
+  ["— Tu es libre demain ?", ["Je ne sais pas", "Ça va", "Ce n’est pas grave"], "Je ne sais pas"],
+  ["— J’ai oublié notre rendez-vous…", ["Ce n’est pas grave", "D’accord", "De rien"], "Ce n’est pas grave"],
+  ["— On se retrouve à 18h ?", ["À bientôt", "D’accord", "Pas de problème"], "D’accord"],
+  ["— Merci pour tout !", ["De rien", "Pas du tout", "Je ne sais pas"], "De rien"],
+  ["— Je dois y aller…", ["À bientôt", "Ça va", "Je suis désolé"], "À bientôt"]
+];
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) u.voice = fr;
+  speechSynthesis.speak(u);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderFill() {
+  const container = document.getElementById("fill-expressions");
+  expressions.forEach(([text, answer], i) => {
+    const id = "f" + i;
+    const html = `<div class="question">${text.replace("___", `<input type="text" id="${id}" placeholder="...">`)}
+      <button onclick="speak('${answer}')">🔊</button>
+      <div class="explanation" id="exp${id}">✅ ${answer}</div></div>`;
+    container.innerHTML += html;
+  });
+}
+
+function renderDialogues() {
+  const container = document.getElementById("dialogue-expressions");
+  dialogues.forEach(([question, options, correct], i) => {
+    const id = "d" + i;
+    let html = `<div class="question"><strong>${question}</strong><br><select id="${id}">
+      <option value="">—</option>`;
+    options.forEach(opt => {
+      html += `<option value="${opt}">${opt}</option>`;
+    });
+    html += `</select> <button onclick="speak('${correct}')">🔊</button>
+      <div class="explanation" id="exp${id}">✅ ${correct}</div></div>`;
+    container.innerHTML += html;
+  });
+}
+
+function checkFill() {
+  let score = 0;
+  expressions.forEach(([, answer], i) => {
+    const input = document.getElementById("f" + i);
+    const exp = document.getElementById("expf" + i);
+    const val = input.value.trim().toLowerCase();
+    input.classList.remove("correct", "missed");
+    if (val === answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+    document.getElementById("expf" + i)?.classList?.add("shown");
+    document.getElementById("expf" + i)?.style?.setProperty("display", "block");
+  });
+  document.getElementById("fill-score").innerText = `Résultat : ${score} / ${expressions.length}`;
+}
+
+function checkDialogues() {
+  let score = 0;
+  dialogues.forEach(([, , correct], i) => {
+    const sel = document.getElementById("d" + i);
+    const exp = document.getElementById("expd" + i);
+    if (sel.value === correct) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+    document.getElementById("expd" + i)?.style?.setProperty("display", "block");
+  });
+  document.getElementById("dialogue-score").innerText = `Résultat : ${score} / ${dialogues.length}`;
+}
+
+window.onload = function () {
+  renderFill();
+  renderDialogues();
+};
+</script>
+
+</body>
+</html>
