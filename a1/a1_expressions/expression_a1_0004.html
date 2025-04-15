@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (4) — dialogues + audio</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    select { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 4</h2>
+<p>Complétez chaque dialogue avec l'expression correcte. Cliquez sur 🔊 pour écouter.</p>
+
+<div id="exercise-container"></div>
+
+<p id="score"></p>
+<button onclick="checkAnswers()">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "C’est pas possible !", "J’en doute", "Tant pis", "Ça marche",
+  "Je t’en prie", "Fais gaffe !", "Ça ne me dit rien",
+  "J’y pense", "Ça me saoule", "Tu veux rire ?"
+];
+
+const dialogues = [
+  {
+    full: "— Tu as payé 200 euros pour ça ? — Tu veux rire ?",
+    withGap: "— Tu as payé 200 euros pour ça ? — ___",
+    answer: "Tu veux rire ?"
+  },
+  {
+    full: "— Tu crois qu’il viendra ? — J’en doute.",
+    withGap: "— Tu crois qu’il viendra ? — ___",
+    answer: "J’en doute"
+  },
+  {
+    full: "— On annule le rendez-vous ? — Tant pis.",
+    withGap: "— On annule le rendez-vous ? — ___",
+    answer: "Tant pis"
+  },
+  {
+    full: "— Tu peux me prêter ton livre ? — Je t’en prie.",
+    withGap: "— Tu peux me prêter ton livre ? — ___",
+    answer: "Je t’en prie"
+  },
+  {
+    full: "— Ce bruit toute la journée, j’en peux plus… — Ça me saoule.",
+    withGap: "— Ce bruit toute la journée, j’en peux plus… — ___",
+    answer: "Ça me saoule"
+  },
+  {
+    full: "— On se retrouve devant la gare à 18h ? — Ça marche.",
+    withGap: "— On se retrouve devant la gare à 18h ? — ___",
+    answer: "Ça marche"
+  },
+  {
+    full: "— Il a mangé 5 burgers en 10 minutes ! — C’est pas possible !",
+    withGap: "— Il a mangé 5 burgers en 10 minutes ! — ___",
+    answer: "C’est pas possible !"
+  },
+  {
+    full: "— Fais attention à la marche ! — Fais gaffe !",
+    withGap: "— Fais attention à la marche ! — ___",
+    answer: "Fais gaffe !"
+  },
+  {
+    full: "— On va au concert ce soir ? — Ça ne me dit rien.",
+    withGap: "— On va au concert ce soir ? — ___",
+    answer: "Ça ne me dit rien"
+  },
+  {
+    full: "— Tu sais, je pensais justement à ça. — J’y pense.",
+    withGap: "— Tu sais, je pensais justement à ça. — ___",
+    answer: "J’y pense"
+  }
+];
+
+// Fonction pour mélanger les options aléatoirement
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercise() {
+  const container = document.getElementById("exercise-container");
+  dialogues.forEach((dlg, i) => {
+    const id = "q" + i;
+    const shuffled = shuffle([...expressions]);
+    const options = shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("");
+    container.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊 Écouter</button><br>
+        ${dlg.withGap.replace("___", `<select id="${id}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("q" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score").innerText = `Résultat : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercise;
+</script>
+
+</body>
+</html>
