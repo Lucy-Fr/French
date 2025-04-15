@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice interactif : les prépositions en contexte administratif</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .explanation {
+      color: green;
+      display: none;
+      margin-top: 5px;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .correct {
+      background-color: #c8f7c5;
+    }
+    .missed {
+      background-color: #fce3e3;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Exercice interactif : Choisissez le(s) bon(s) préposition(s)</h2>
+
+  <div class="question">
+    <p>1. Il a déposé son dossier ___ la préfecture.</p>
+    <label><input type="checkbox" name="q1" value="à"> à</label><br>
+    <label><input type="checkbox" name="q1" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q1" value="chez"> chez</label><br>
+    <label><input type="checkbox" name="q1" value="par"> par</label><br>
+    <div class="explanation" id="exp1">✅ À / dans<br>✨ <em>Он подал своё досье в префектуру.</em></div>
+  </div>
+
+  <div class="question">
+    <p>2. Elle habite ___ les environs de Lyon.</p>
+    <label><input type="checkbox" name="q2" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q2" value="aux"> aux</label><br>
+    <label><input type="checkbox" name="q2" value="chez"> chez</label><br>
+    <label><input type="checkbox" name="q2" value="sur"> sur</label><br>
+    <div class="explanation" id="exp2">✅ dans / aux<br>✨ <em>Она живёт в окрестностях Лиона.</em></div>
+  </div>
+
+  <div class="question">
+    <p>3. Ce document doit être envoyé ___ l'ambassade.</p>
+    <label><input type="checkbox" name="q3" value="à"> à</label><br>
+    <label><input type="checkbox" name="q3" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q3" value="en"> en</label><br>
+    <label><input type="checkbox" name="q3" value="chez"> chez</label><br>
+    <div class="explanation" id="exp3">✅ À<br>✨ <em>Этот документ должен быть отправлен в посольство.</em></div>
+  </div>
+
+  <div class="question">
+    <p>4. Il suit une formation ___ un centre de l'OFII.</p>
+    <label><input type="checkbox" name="q4" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q4" value="en"> en</label><br>
+    <label><input type="checkbox" name="q4" value="par"> par</label><br>
+    <label><input type="checkbox" name="q4" value="sur"> sur</label><br>
+    <div class="explanation" id="exp4">✅ dans<br>✨ <em>Он проходит обучение в одном из центров OFII.</em></div>
+  </div>
+
+  <div class="question">
+    <p>5. Il est actuellement domicilié ___ territoire français.</p>
+    <label><input type="checkbox" name="q5" value="sur"> sur</label><br>
+    <label><input type="checkbox" name="q5" value="en"> en</label><br>
+    <label><input type="checkbox" name="q5" value="chez"> chez</label><br>
+    <label><input type="checkbox" name="q5" value="dans"> dans</label><br>
+    <div class="explanation" id="exp5">✅ sur / en<br>✨ <em>В настоящее время он зарегистрирован на территории Франции.</em></div>
+  </div>
+
+  <div class="question">
+    <p>6. Le rendez-vous aura lieu ___ la mairie du 14e arrondissement.</p>
+    <label><input type="checkbox" name="q6" value="à"> à</label><br>
+    <label><input type="checkbox" name="q6" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q6" value="sur"> sur</label><br>
+    <label><input type="checkbox" name="q6" value="chez"> chez</label><br>
+    <div class="explanation" id="exp6">✅ à / dans<br>✨ <em>Встреча состоится в мэрии 14-го округа.</em></div>
+  </div>
+
+  <div class="question">
+    <p>7. Il a assisté à une réunion ___ le service juridique.</p>
+    <label><input type="checkbox" name="q7" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q7" value="au"> au</label><br>
+    <label><input type="checkbox" name="q7" value="par"> par</label><br>
+    <label><input type="checkbox" name="q7" value="à"> à</label><br>
+    <div class="explanation" id="exp7">✅ au / dans<br>✨ <em>Он присутствовал на собрании в юридическом отделе.</em></div>
+  </div>
+
+  <div class="question">
+    <p>8. Les documents sont disponibles ___ guichet n°3.</p>
+    <label><input type="checkbox" name="q8" value="au"> au</label><br>
+    <label><input type="checkbox" name="q8" value="à"> à</label><br>
+    <label><input type="checkbox" name="q8" value="dans"> dans</label><br>
+    <label><input type="checkbox" name="q8" value="chez"> chez</label><br>
+    <div class="explanation" id="exp8">✅ au<br>✨ <em>Документы доступны в окне номер 3.</em></div>
+  </div>
+
+  <button onclick="showAnswers()">Vérifier les réponses</button>
+  <p id="summary" class="result" style="display: none;"></p>
+
+  <script>
+    const correctAnswers = {
+      q1: ['à', 'dans'],
+      q2: ['dans', 'aux'],
+      q3: ['à'],
+      q4: ['dans'],
+      q5: ['sur', 'en'],
+      q6: ['à', 'dans'],
+      q7: ['au', 'dans'],
+      q8: ['au']
+    };
+
+    function showAnswers() {
+      let totalCorrect = 0;
+      let totalSelectedCorrect = 0;
+
+      for (let i = 1; i <= 8; i++) {
+        const qName = 'q' + i;
+        const checkboxes = document.querySelectorAll('input[name="' + qName + '"]');
+        const correctSet = new Set(correctAnswers[qName]);
+
+        checkboxes.forEach(cb => {
+          cb.parentElement.classList.remove('correct', 'missed');
+          if (cb.checked && correctSet.has(cb.value)) {
+            totalSelectedCorrect++;
+            cb.parentElement.classList.add('correct');
+          } else if (!cb.checked && correctSet.has(cb.value)) {
+            cb.parentElement.classList.add('missed');
+          }
+        });
+
+        totalCorrect += correctSet.size;
+        document.getElementById("exp" + i).style.display = "block";
+      }
+
+      document.getElementById("summary").innerText =
+        `Vous avez sélectionné ${totalSelectedCorrect} bonne(s) réponse(s) sur ${totalCorrect} possibles.`;
+      document.getElementById("summary").style.display = "block";
+    }
+  </script>
+</body>
+</html>
