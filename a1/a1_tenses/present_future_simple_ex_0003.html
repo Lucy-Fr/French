@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercice A1 : Présent ou Futur simple — avec filtres</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .question { margin-bottom: 20px; }
+    .explanation { color: green; display: none; margin-top: 5px; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    button { margin-top: 10px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h2>Exercice A1 : Présent ou Futur simple — avec filtres</h2>
+<p>Choisissez un verbe et/ou un temps pour filtrer les questions.</p>
+
+<label for="verb-filter">Filtrer par verbe :</label>
+<select id="verb-filter" onchange="filterQuestions()">
+  <option value="all">Tous les verbes</option>
+  <option value="choisir">choisir</option>
+  <option value="manger">manger</option>
+  <option value="venir">venir</option>
+  <option value="savoir">savoir</option>
+  <option value="écrire">écrire</option>
+  <option value="attendre">attendre</option>
+  <option value="connaître">connaître</option>
+</select>
+
+<label for="tense-filter">Filtrer par temps :</label>
+<select id="tense-filter" onchange="filterQuestions()">
+  <option value="all">Présent et Futur simple</option>
+  <option value="present">Présent</option>
+  <option value="futur">Futur simple</option>
+</select>
+
+<div id="questions-container"></div>
+
+<button onclick="showAnswers()">Vérifier les réponses</button>
+<button onclick="resetQuiz()">Réinitialiser</button>
+<p id="summary" class="result" style="display: none;"></p>
+
+<script>
+const data = [
+  ["Je ___ une pomme chaque matin.", "mange", "Я ем яблоко каждое утро.", "manger", "present"],
+  ["Tu ___ ce que tu dois faire.", "sais", "Ты знаешь, что тебе нужно делать.", "savoir", "present"],
+  ["Il ___ à la fête demain soir.", "viendra", "Он придёт на вечеринку завтра вечером.", "venir", "futur"],
+  ["Nous ___ ce livre avant la fin du mois.", "lirons", "Мы прочитаем эту книгу до конца месяца.", "lire", "futur"],
+  ["Vous ___ un bon film ce soir.", "allez regarder", "Вы посмотрите хороший фильм сегодня вечером.", "aller", "futur"],
+  ["Ils ___ toujours très tôt.", "partent", "Они всегда уходят очень рано.", "partir", "present"],
+  ["Je ___ mes devoirs maintenant.", "fais", "Я делаю домашнюю работу сейчас.", "faire", "present"],
+  ["Tu ___ ce que je veux dire.", "comprendras", "Ты поймёшь, что я имею в виду.", "comprendre", "futur"],
+  ["Elle ___ le bon chemin.", "choisit", "Она выбирает правильный путь.", "choisir", "present"],
+  ["Nous ___ ensemble demain matin.", "viendrons", "Мы придём вместе завтра утром.", "venir", "futur"],
+  ["Vous ___ une lettre à votre ami ?", "écrivez", "Вы пишете письмо другу?", "écrire", "present"],
+  ["Ils ___ à la gare à 18h.", "attendront", "Они будут ждать на вокзале в 18:00.", "attendre", "futur"],
+  ["Je ___ bien cette chanson.", "connais", "Я хорошо знаю эту песню.", "connaître", "present"],
+  ["Tu ___ le menu du jour ?", "choisis", "Ты выбираешь блюдо дня?", "choisir", "present"],
+  ["Il ___ un sandwich à midi.", "mangera", "Он съест сэндвич в полдень.", "manger", "futur"],
+  ["Nous ___ tout ce que nous pouvons.", "savons", "Мы знаем всё, что можем.", "savoir", "present"],
+  ["Vous ___ la vérité demain.", "saurez", "Вы узнаете правду завтра.", "savoir", "futur"],
+  ["Elles ___ toujours à l’heure.", "viennent", "Они всегда приходят вовремя.", "venir", "present"],
+  ["On ___ une décision bientôt.", "prendra", "Мы скоро примем решение.", "prendre", "futur"],
+  ["Je ___ une surprise pour toi.", "prépare", "Я готовлю для тебя сюрприз.", "préparer", "present"]
+];
+
+function createQuiz(verbFilter = "all", tenseFilter = "all") {
+  const container = document.getElementById("questions-container");
+  container.innerHTML = "";
+  for (let i = 0; i < data.length; i++) {
+    const [text, correct, translation, verb, tense] = data[i];
+    if ((verbFilter !== "all" && verb !== verbFilter) || (tenseFilter !== "all" && tense !== tenseFilter)) continue;
+    const qId = "q" + (i + 1);
+
+    const block = document.createElement("div");
+    block.className = "question";
+
+    let html = `<p>${i + 1}. ${text}</p>`;
+    html += `<input type="text" id="${qId}" placeholder="Votre réponse..." />`;
+    html += `<div class="explanation" id="exp${i + 1}">✅ ${correct}<br>✨ <em>${translation}</em></div>`;
+
+    block.innerHTML = html;
+    container.appendChild(block);
+  }
+}
+
+function filterQuestions() {
+  const selectedVerb = document.getElementById("verb-filter").value;
+  const selectedTense = document.getElementById("tense-filter").value;
+  createQuiz(selectedVerb, selectedTense);
+}
+
+function showAnswers() {
+  let total = 0;
+  let score = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const [_, correct, __, ___, _____] = data[i];
+    const qId = "q" + (i + 1);
+    const input = document.getElementById(qId);
+    const exp = document.getElementById("exp" + (i + 1));
+    if (!input) continue;
+    total++;
+    const answer = input.value.trim().toLowerCase();
+    input.classList.remove("correct", "missed");
+    if (answer === correct) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+    exp.style.display = "block";
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerText = `Vous avez ${score} bonne(s) réponse(s) sur ${total}.`;
+  summary.style.display = "block";
+}
+
+function resetQuiz() {
+  for (let i = 0; i < data.length; i++) {
+    const qId = "q" + (i + 1);
+    const input = document.getElementById(qId);
+    const exp = document.getElementById("exp" + (i + 1));
+    if (input) {
+      input.value = "";
+      input.classList.remove("correct", "missed");
+    }
+    if (exp) {
+      exp.style.display = "none";
+    }
+  }
+  document.getElementById("summary").style.display = "none";
+}
+
+createQuiz();
+</script>
+
+<p>
+  <a href="../a1_tenses.html">← Назад к временам глагола</a> |
+  <a href="../../index.html">🏠 На главную</a>
+</p>
+
+</body>
+</html>
