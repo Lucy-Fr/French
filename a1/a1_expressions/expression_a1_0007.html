@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (7) — dialogues + audio + insertion libre</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    select, input[type="text"] { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 7</h2>
+<p>Voici une nouvelle série d'expressions familières avec leur traduction en russe et une explication grammaticale :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Объяснение</th></tr>
+  <tr><td>Tu m’étonnes</td><td>Да уж / Не удивлён</td><td>Ироническое согласие</td></tr>
+  <tr><td>Ça te va ?</td><td>Тебе подходит?</td><td>Выражение с «aller»</td></tr>
+  <tr><td>C’est pas grave</td><td>Ничего страшного</td><td>Отрицание с «être»</td></tr>
+  <tr><td>Franchement</td><td>Честно говоря</td><td>Наречие для усиления</td></tr>
+  <tr><td>T’inquiète</td><td>Не волнуйся</td><td>Сокращённая форма от «ne t’inquiète pas»</td></tr>
+  <tr><td>J’arrive pas à croire</td><td>Не могу поверить</td><td>Разговорная форма отрицания + infinitif</td></tr>
+  <tr><td>Y a pas de souci</td><td>Без проблем</td><td>Сокращённая форма от «il n’y a pas de souci»</td></tr>
+  <tr><td>Ça fait longtemps</td><td>Давно не виделись</td><td>Выражение времени</td></tr>
+  <tr><td>C’est clair</td><td>Ясно / Однозначно</td><td>Утверждение + прилагательное</td></tr>
+  <tr><td>Ça me dit rien</td><td>Мне это ни о чём не говорит</td><td>Фраза с отрицанием и местоимением</td></tr>
+</table>
+
+<h3>🧩 Exercice 1 — Choisissez l'expression correcte</h3>
+<p>Complétez chaque dialogue avec l'expression appropriée. Cliquez sur 🔊 pour écouter.</p>
+<div id="dropdown-exercise"></div>
+<p id="score1"></p>
+
+<h3>✍️ Exercice 2 — Écrivez l'expression correcte</h3>
+<p>Inscrivez la bonne expression dans chaque espace vide.</p>
+<div id="input-exercise"></div>
+<p id="score2"></p>
+
+<button onclick="checkDropdown(); checkInput();">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "Tu m’étonnes", "Ça te va ?", "C’est pas grave", "Franchement", "T’inquiète",
+  "J’arrive pas à croire", "Y a pas de souci", "Ça fait longtemps", "C’est clair", "Ça me dit rien"
+];
+
+const dialogues = [
+  {
+    full: "— Il a encore oublié son rendez-vous. — Tu m’étonnes.",
+    withGap: "— Il a encore oublié son rendez-vous. — ___",
+    answer: "Tu m’étonnes"
+  },
+  {
+    full: "— Je t’ai pris une place à gauche. Ça te va ?",
+    withGap: "— Je t’ai pris une place à gauche. ___",
+    answer: "Ça te va ?"
+  },
+  {
+    full: "— Désolé pour le retard. — C’est pas grave.",
+    withGap: "— Désolé pour le retard. — ___",
+    answer: "C’est pas grave"
+  },
+  {
+    full: "— Franchement, j’ai pas aimé le film.",
+    withGap: "— ___, j’ai pas aimé le film.",
+    answer: "Franchement"
+  },
+  {
+    full: "— Je suis stressé pour demain… — T’inquiète.",
+    withGap: "— Je suis stressé pour demain… — ___",
+    answer: "T’inquiète"
+  },
+  {
+    full: "— Il a gagné à la loterie ? J’arrive pas à croire !",
+    withGap: "— Il a gagné à la loterie ? ___ !",
+    answer: "J’arrive pas à croire"
+  },
+  {
+    full: "— Merci pour ton aide. — Y a pas de souci.",
+    withGap: "— Merci pour ton aide. — ___",
+    answer: "Y a pas de souci"
+  },
+  {
+    full: "— Salut ! Ça fait longtemps !",
+    withGap: "— Salut ! ___ !",
+    answer: "Ça fait longtemps"
+  },
+  {
+    full: "— Il a copié mon travail. — C’est clair qu’il abuse.",
+    withGap: "— Il a copié mon travail. — ___ qu’il abuse.",
+    answer: "C’est clair"
+  },
+  {
+    full: "— Ce nom me dit rien. — Moi non plus, ça me dit rien.",
+    withGap: "— Ce nom me dit rien. — Moi non plus, ___",
+    answer: "Ça me dit rien"
+  }
+];
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercises() {
+  const dropdownContainer = document.getElementById("dropdown-exercise");
+  const inputContainer = document.getElementById("input-exercise");
+
+  dialogues.forEach((dlg, i) => {
+    const shuffled = shuffle([...expressions]);
+    const options = shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("");
+    
+    dropdownContainer.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊 Écouter</button><br>
+        ${dlg.withGap.replace("___", `<select id="dd${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+
+    inputContainer.innerHTML += `
+      <div class="question">
+        ${dlg.withGap.replace("___", `<input type="text" id="in${i}" placeholder="...">`)}
+      </div>
+    `;
+  });
+}
+
+function checkDropdown() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("dd" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score1").innerText = `Exercice 1 : ${score} / ${dialogues.length}`;
+}
+
+function checkInput() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const input = document.getElementById("in" + i);
+    input.classList.remove("correct", "missed");
+    if (input.value.trim().toLowerCase() === dlg.answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("score2").innerText = `Exercice 2 : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercises;
+</script>
+
+</body>
+</html>

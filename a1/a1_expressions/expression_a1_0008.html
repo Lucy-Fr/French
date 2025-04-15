@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (8) — registres + audio + exercices</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    select, input[type="text"] { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+    .reg { font-style: italic; color: gray; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 8</h2>
+<p>Liste d'expressions avec leur registre, traduction et explication grammaticale :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Грамматика</th><th>Регистр</th></tr>
+  <tr><td>Ça roule</td><td>Всё ок / Всё идёт</td><td>Фраза с глаголом «rouler»</td><td class="reg">разг.</td></tr>
+  <tr><td>Fais voir</td><td>Покажи</td><td>Императив от «faire voir»</td><td class="reg">разг.</td></tr>
+  <tr><td>T’as pas pigé</td><td>Ты не понял</td><td>Сокр. от «Tu n’as pas compris»</td><td class="reg">разг.</td></tr>
+  <tr><td>Il s’en fout</td><td>Ему плевать</td><td>Глагол «s’en foutre»</td><td class="reg">вульгар.</td></tr>
+  <tr><td>Bouge pas</td><td>Не двигайся</td><td>Императив от «bouger»</td><td class="reg">разг.</td></tr>
+  <tr><td>Arrête tes conneries</td><td>Прекрати нести чушь</td><td>Императив + сущ. «connerie»</td><td class="reg">груб.</td></tr>
+  <tr><td>Comme d’hab</td><td>Как обычно</td><td>Сокращ. от «comme d’habitude»</td><td class="reg">разг.</td></tr>
+  <tr><td>Ça ne me regarde pas</td><td>Это не моё дело</td><td>Негатив с «regarder»</td><td class="reg">офиц.</td></tr>
+  <tr><td>On s’arrache</td><td>Уходим / Сваливаем</td><td>Глагол «s’arracher»</td><td class="reg">вульгар.</td></tr>
+  <tr><td>T’inquiète même pas</td><td>Даже не парься</td><td>Сокр. от «ne t’inquiète même pas»</td><td class="reg">разг.</td></tr>
+</table>
+
+<h3>🧩 Exercice 1 — Choisissez l'expression correcte</h3>
+<p>Complétez chaque dialogue avec l'expression appropriée. Cliquez sur 🔊 pour écouter.</p>
+<div id="dropdown-exercise"></div>
+<p id="score1"></p>
+
+<h3>✍️ Exercice 2 — Écrivez l'expression correcte</h3>
+<p>Inscrivez la bonne expression dans chaque espace vide.</p>
+<div id="input-exercise"></div>
+<p id="score2"></p>
+
+<button onclick="checkDropdown(); checkInput();">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "Ça roule", "Fais voir", "T’as pas pigé", "Il s’en fout", "Bouge pas",
+  "Arrête tes conneries", "Comme d’hab", "Ça ne me regarde pas", "On s’arrache", "T’inquiète même pas"
+];
+
+const dialogues = [
+  {
+    full: "— On se retrouve à 18h devant le bar ? — Ça roule !",
+    withGap: "— On se retrouve à 18h devant le bar ? — ___ !",
+    answer: "Ça roule"
+  },
+  {
+    full: "— Tu as un nouveau téléphone ? Fais voir !",
+    withGap: "— Tu as un nouveau téléphone ? ___ !",
+    answer: "Fais voir"
+  },
+  {
+    full: "— Mais non, il ne parlait pas de toi… — T’as pas pigé.",
+    withGap: "— Mais non, il ne parlait pas de toi… — ___",
+    answer: "T’as pas pigé"
+  },
+  {
+    full: "— Il va venir ou pas ? — Il s’en fout.",
+    withGap: "— Il va venir ou pas ? — ___",
+    answer: "Il s’en fout"
+  },
+  {
+    full: "— Je reviens tout de suite, bouge pas.",
+    withGap: "— Je reviens tout de suite, ___",
+    answer: "Bouge pas"
+  },
+  {
+    full: "— Tu vas encore acheter ce truc inutile ? — Arrête tes conneries.",
+    withGap: "— Tu vas encore acheter ce truc inutile ? — ___",
+    answer: "Arrête tes conneries"
+  },
+  {
+    full: "— Tu prends un café ce matin ? — Bien sûr, comme d’hab.",
+    withGap: "— Tu prends un café ce matin ? — Bien sûr, ___",
+    answer: "Comme d’hab"
+  },
+  {
+    full: "— Tu as lu ce message ? — Non, ça ne me regarde pas.",
+    withGap: "— Tu as lu ce message ? — Non, ___",
+    answer: "Ça ne me regarde pas"
+  },
+  {
+    full: "— Il y a trop de bruit ici. On s’arrache ? — Ouais, allez !",
+    withGap: "— Il y a trop de bruit ici. ___ ? — Ouais, allez !",
+    answer: "On s’arrache"
+  },
+  {
+    full: "— J’ai pas eu le poste… — T’inquiète même pas, t’auras mieux.",
+    withGap: "— J’ai pas eu le poste… — ___, t’auras mieux.",
+    answer: "T’inquiète même pas"
+  }
+];
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercises() {
+  const dropdownContainer = document.getElementById("dropdown-exercise");
+  const inputContainer = document.getElementById("input-exercise");
+
+  dialogues.forEach((dlg, i) => {
+    const shuffled = shuffle([...expressions]);
+    const options = shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("");
+    
+    dropdownContainer.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊 Écouter</button><br>
+        ${dlg.withGap.replace("___", `<select id="dd${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+
+    inputContainer.innerHTML += `
+      <div class="question">
+        ${dlg.withGap.replace("___", `<input type="text" id="in${i}" placeholder="...">`)}
+      </div>
+    `;
+  });
+}
+
+function checkDropdown() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("dd" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score1").innerText = `Exercice 1 : ${score} / ${dialogues.length}`;
+}
+
+function checkInput() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const input = document.getElementById("in" + i);
+    input.classList.remove("correct", "missed");
+    if (input.value.trim().toLowerCase() === dlg.answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("score2").innerText = `Exercice 2 : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercises;
+</script>
+
+</body>
+</html>

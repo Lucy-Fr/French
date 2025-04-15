@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expressions courantes (6) — dialogues + audio + insertion libre</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .question { margin-bottom: 25px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    select, input[type="text"] { padding: 5px; }
+    button { margin: 10px 5px; }
+    table { border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 6px 12px; border: 1px solid #ccc; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h2>📘 Expressions courantes — Série 6</h2>
+<p>Voici une liste d'expressions familières avec leur traduction en russe et une explication grammaticale :</p>
+
+<table>
+  <tr><th>Expression</th><th>Перевод</th><th>Объяснение</th></tr>
+  <tr><td>C’est nul</td><td>Это отстой</td><td>Разговорная форма оценки</td></tr>
+  <tr><td>Ça y est</td><td>Вот и всё / Готово</td><td>Идиома, выражающая завершённость</td></tr>
+  <tr><td>Je suis partant(e)</td><td>Я за / Я готов</td><td>Форма причастия от «partir» с être</td></tr>
+  <tr><td>C’est pas donné</td><td>Дорого / Не дёшево</td><td>Отрицательная форма с пассивом</td></tr>
+  <tr><td>Tu gères</td><td>Ты круто справляешься</td><td>Глагол «gérer» — «управлять», разговорно — «молодец»</td></tr>
+  <tr><td>J’ai la flemme</td><td>Мне лень</td><td>Фразеологизм с существительным «flemme»</td></tr>
+  <tr><td>Je me suis planté(e)</td><td>Я облажался(лась)</td><td>Разговорная форма глагола «se planter» в passé composé</td></tr>
+  <tr><td>Nickel</td><td>Супер / Чисто / Отлично</td><td>Сленговое прилагательное — позитивная оценка</td></tr>
+  <tr><td>Laisse tomber</td><td>Забей / Забудь</td><td>Императив глагола «laisser tomber»</td></tr>
+  <tr><td>On se casse</td><td>Уходим / Сваливаем</td><td>Разг. форма глагола «se casser»</td></tr>
+</table>
+
+<h3>🧩 Exercice 1 — Choisissez l'expression correcte</h3>
+<p>Complétez chaque dialogue avec la bonne expression. Cliquez sur 🔊 pour écouter.</p>
+<div id="dropdown-exercise"></div>
+<p id="score1"></p>
+
+<h3>✍️ Exercice 2 — Écrivez l'expression correcte</h3>
+<p>Inscrivez la bonne expression dans chaque espace vide.</p>
+<div id="input-exercise"></div>
+<p id="score2"></p>
+
+<button onclick="checkDropdown(); checkInput();">Vérifier</button>
+<button onclick="location.reload()">Réinitialiser</button>
+
+<p>
+  <a href="../a1_expressions.html">← Retour aux expressions</a> |
+  <a href="../../index.html">🏠 Accueil</a>
+</p>
+
+<script>
+const expressions = [
+  "C’est nul", "Ça y est", "Je suis partant(e)", "C’est pas donné", "Tu gères",
+  "J’ai la flemme", "Je me suis planté(e)", "Nickel", "Laisse tomber", "On se casse"
+];
+
+const dialogues = [
+  {
+    full: "— J’ai enfin fini mon exposé ! — Ça y est !",
+    withGap: "— J’ai enfin fini mon exposé ! — ___ !",
+    answer: "Ça y est"
+  },
+  {
+    full: "— Tu veux aller à la plage ? — Je suis partant(e).",
+    withGap: "— Tu veux aller à la plage ? — ___",
+    answer: "Je suis partant(e)"
+  },
+  {
+    full: "— Ce resto est sympa, mais c’est pas donné.",
+    withGap: "— Ce resto est sympa, mais ___",
+    answer: "C’est pas donné"
+  },
+  {
+    full: "— Tu as géré tout ça tout seul ? — Ouais, tu gères !",
+    withGap: "— Tu as géré tout ça tout seul ? — Ouais, ___ !",
+    answer: "Tu gères"
+  },
+  {
+    full: "— Tu viens avec nous ? — Non, j’ai la flemme.",
+    withGap: "— Tu viens avec nous ? — Non, ___",
+    answer: "J’ai la flemme"
+  },
+  {
+    full: "— T’as bien réussi ton test ? — Non, je me suis planté(e).",
+    withGap: "— T’as bien réussi ton test ? — Non, ___",
+    answer: "Je me suis planté(e)"
+  },
+  {
+    full: "— J’ai acheté ce jeu, mais il est nul. — C’est nul.",
+    withGap: "— J’ai acheté ce jeu, mais il est nul. — ___",
+    answer: "C’est nul"
+  },
+  {
+    full: "— C’est bon, tout est rangé. — Nickel.",
+    withGap: "— C’est bon, tout est rangé. — ___",
+    answer: "Nickel"
+  },
+  {
+    full: "— Il est encore en retard… — Laisse tomber.",
+    withGap: "— Il est encore en retard… — ___",
+    answer: "Laisse tomber"
+  },
+  {
+    full: "— Il fait trop de bruit ici. — Allez, on se casse.",
+    withGap: "— Il fait trop de bruit ici. — Allez, ___",
+    answer: "On se casse"
+  }
+];
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang === 'fr-FR');
+  if (fr) utterance.voice = fr;
+  speechSynthesis.speak(utterance);
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+function renderExercises() {
+  const dropdownContainer = document.getElementById("dropdown-exercise");
+  const inputContainer = document.getElementById("input-exercise");
+
+  dialogues.forEach((dlg, i) => {
+    const shuffled = shuffle([...expressions]);
+    const options = shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("");
+    
+    dropdownContainer.innerHTML += `
+      <div class="question">
+        <button onclick="speak('${dlg.full}')">🔊 Écouter</button><br>
+        ${dlg.withGap.replace("___", `<select id="dd${i}"><option value="">—</option>${options}</select>`)}
+      </div>
+    `;
+
+    inputContainer.innerHTML += `
+      <div class="question">
+        ${dlg.withGap.replace("___", `<input type="text" id="in${i}" placeholder="...">`)}
+      </div>
+    `;
+  });
+}
+
+function checkDropdown() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const sel = document.getElementById("dd" + i);
+    sel.classList.remove("correct", "missed");
+    if (sel.value === dlg.answer) {
+      sel.classList.add("correct");
+      score++;
+    } else {
+      sel.classList.add("missed");
+    }
+  });
+  document.getElementById("score1").innerText = `Exercice 1 : ${score} / ${dialogues.length}`;
+}
+
+function checkInput() {
+  let score = 0;
+  dialogues.forEach((dlg, i) => {
+    const input = document.getElementById("in" + i);
+    input.classList.remove("correct", "missed");
+    if (input.value.trim().toLowerCase() === dlg.answer.toLowerCase()) {
+      input.classList.add("correct");
+      score++;
+    } else {
+      input.classList.add("missed");
+    }
+  });
+  document.getElementById("score2").innerText = `Exercice 2 : ${score} / ${dialogues.length}`;
+}
+
+window.onload = renderExercises;
+</script>
+
+</body>
+</html>

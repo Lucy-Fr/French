@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Maxi-jeu : Expressions courantes (1–3)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+    .question { margin-bottom: 20px; }
+    .correct { background-color: #c8f7c5; }
+    .missed { background-color: #fce3e3; }
+    .answer { margin-left: 10px; }
+    button { margin: 10px 5px; }
+  </style>
+</head>
+<body>
+  <h2>🎯 Maxi-jeu — Révisez 30 expressions courantes</h2>
+  <p>Complétez chaque phrase avec l'expression correcte (choix multiple ou insertion manuelle). Cliquez sur 🔊 pour écouter.</p>
+  <div id="game"></div>
+  <p id="result"></p>
+  <button onclick="checkGame()">Vérifier</button>
+  <button onclick="location.reload()">Réinitialiser</button>
+
+  <p>
+    <a href="../a1_expressions.html">← Retour aux expressions</a> |
+    <a href="../../index.html">🏠 Accueil</a>
+  </p>
+
+  <script>
+    const expressions = [
+      "Ça marche", "Pas de souci", "Je suis désolé(e)", "C’est une bonne idée", "Pas du tout",
+      "D’accord", "Tant pis", "Ça dépend", "C’est pas grave", "Avec plaisir",
+      "Ça me va", "Je suis d’accord", "Je n’en peux plus", "Pas maintenant", "C’est génial",
+      "Je crois que oui", "Je ne sais pas", "Je plaisante", "Tu as raison", "Désolé pour le retard",
+      "Ça m’est égal", "Tu plaisantes", "Je suis crevé(e)", "Bonne chance", "C’est dommage",
+      "Je n’ai pas le choix", "Je m’en fiche", "Tu vas y arriver", "On se tient au courant", "Je croise les doigts"
+    ];
+
+    const questions = [
+      ["— On se voit à 18h ? — ___", "Ça marche", "select"],
+      ["— Tu veux un café ? — ___", "Avec plaisir", "select"],
+      ["— Je n’ai pas fini le projet. — ___", "Ce n’est pas grave", "text"],
+      ["— Je suis désolé pour hier. — ___", "Pas de souci", "text"],
+      ["— Tu veux sortir ce soir ? — ___", "Ça dépend", "select"],
+      ["— Je suis crevé ! — ___", "Je n’en peux plus", "select"],
+      ["— Je ne peux pas venir. — ___", "Tant pis", "text"],
+      ["— Tu veux venir ? — ___", "Pas du tout", "text"],
+      ["— J’ai oublié de t’appeler. — ___", "Désolé pour le retard", "select"],
+      ["— Tu es prêt ? — ___", "Je crois que oui", "select"],
+      ["— C’est une mauvaise idée. — ___", "Tu as raison", "text"],
+      ["— C’est une bonne idée ! — ___", "Je suis d’accord", "text"],
+      ["— Tu vas réussir ton examen ! — ___", "Je croise les doigts", "select"],
+      ["— Tu es d’accord ? — ___", "Ça me va", "select"],
+      ["— On reste en contact ? — ___", "On se tient au courant", "select"],
+      ["— C’est difficile, mais je dois le faire. — ___", "Je n’ai pas le choix", "select"],
+      ["— Tu veux qu’on sorte ? — ___", "Pas maintenant", "text"],
+      ["— Je te souhaite bon courage ! — ___", "Bonne chance", "select"],
+      ["— Je rigole. — ___", "Je plaisante", "text"],
+      ["— C’est super ! — ___", "C’est génial", "select"],
+      ["— Tu t’en fiches ? — ___", "Je m’en fiche", "text"],
+      ["— C’est nul ! — ___", "C’est dommage", "select"],
+      ["— Tu rigoles ? — ___", "Tu plaisantes", "select"],
+      ["— Je ne sais pas quoi faire. — ___", "Je ne sais pas", "text"],
+      ["— Tu vas y arriver ! — ___", "Tu vas y arriver", "text"],
+      ["— C’est toi qui as raison. — ___", "Tu as raison", "text"],
+      ["— Je n’ai pas le choix. — ___", "Je n’ai pas le choix", "text"],
+      ["— On y va ensemble ? — ___", "Ça me va", "text"],
+      ["— C’est difficile à dire. — ___", "Ça dépend", "select"],
+      ["— Je suis très fatigué. — ___", "Je suis crevé(e)", "select"]
+    ];
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'fr-FR';
+      const voices = speechSynthesis.getVoices();
+      const fr = voices.find(v => v.lang === 'fr-FR');
+      if (fr) utterance.voice = fr;
+      speechSynthesis.speak(utterance);
+    }
+
+    speechSynthesis.onvoiceschanged = () => {};
+
+    function renderGame() {
+      const container = document.getElementById("game");
+      questions.forEach((q, i) => {
+        let input;
+        if (q[2] === "select") {
+          const shuffled = [...expressions].sort(() => Math.random() - 0.5);
+          input = `<select id="q${i}"><option value="">—</option>${shuffled.map(exp => `<option value="${exp}">${exp}</option>`).join("")}</select>`;
+        } else {
+          input = `<input type="text" id="q${i}" placeholder="...">`;
+        }
+        container.innerHTML += `
+          <div class="question">
+            <button onclick="speak('${q[0]} ${q[1]}')">🔊</button>
+            ${q[0].replace("___", input)} 
+            <span class="answer" id="a${i}"></span>
+          </div>
+        `;
+      });
+    }
+
+    function checkGame() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        const input = document.getElementById("q" + i);
+        const correct = q[1].toLowerCase();
+        const userVal = input.value.trim().toLowerCase();
+        const feedback = document.getElementById("a" + i);
+        input.classList.remove("correct", "missed");
+        if (userVal === correct) {
+          input.classList.add("correct");
+          feedback.innerText = "✅";
+          score++;
+        } else {
+          input.classList.add("missed");
+          feedback.innerText = `❌ (${q[1]})`;
+        }
+      });
+      document.getElementById("result").innerText = `Résultat : ${score} bonne(s) réponse(s) sur ${questions.length}.`;
+    }
+
+    window.onload = renderGame;
+  </script>
+</body>
+</html>
