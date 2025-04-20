@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test interactif : Avoir faim / soif</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 1rem;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .correct {
+      background-color: #c6f6d5;
+    }
+    .wrong {
+      background-color: #feb2b2;
+    }
+    .explanation {
+      margin-top: 1rem;
+      background: #f9f9f9;
+      padding: 0.5rem;
+      border-left: 4px solid #ccc;
+    }
+    .progress {
+      height: 20px;
+      background: #eee;
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #3182ce;
+      width: 0%;
+    }
+    .navigation, .footer-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    .footer-buttons a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background-color: #3182ce;
+      color: white;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test interactif : Avoir faim / soif</h1>
+  <label>
+    Audio: <input type="checkbox" id="audioToggle" checked />
+  </label>
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="navigation">
+    <button onclick="previousQuestion()">← Назад</button>
+    <button onclick="nextQuestion()">Вперёд →</button>
+  </div>
+  <div class="footer-buttons">
+    <a href="https://lucy-fr.github.io/French/a2/index.html">Вернуться к категориям</a>
+    <a href="https://lucy-fr.github.io/French/index.html">Назад на главную</a>
+  </div>
+
+  <script>
+    const questions = [{"question": "Après le sport, j’ai toujours très _______.", "options": ["soif", "glace", "vélo", "hiver"], "correct": 0, "explanation": "Après un effort physique, on dit souvent 'j’ai soif' — хочется пить.", "translation": "После спорта мне всегда очень хочется пить."}, {"question": "Tu veux une pizza ? – Oui, j’ai super _______ !", "options": ["faim", "chaud", "mal", "peur"], "correct": 0, "explanation": "'Avoir faim' — хотеть есть. Выражение: 'J’ai super faim !' — очень хочется есть.", "translation": "Ты хочешь пиццу? – Да, я ужасно голоден!"}, {"question": "Il fait 35 degrés, j’ai _______ même sans bouger !", "options": ["soif", "envie", "souri", "tristesse"], "correct": 0, "explanation": "'Avoir soif' — хочется пить, особенно когда жарко.", "translation": "На улице 35 градусов, а я хочу пить, даже не двигаясь!"}, {"question": "Je n’ai pas mangé depuis ce matin. J’ai une _______ de loup !", "options": ["faim", "soif", "tête", "colère"], "correct": 0, "explanation": "Выражение 'avoir une faim de loup' — быть очень голодным.", "translation": "Я не ел с утра. Я голоден как волк!"}, {"question": "On va boire un verre ? – Oui, j’ai une _______ terrible.", "options": ["soif", "lampe", "jupe", "bouteille"], "correct": 0, "explanation": "Выражение 'avoir une soif terrible' означает сильную жажду.", "translation": "Пойдём выпьем? – Да, у меня страшная жажда."}, {"question": "Même après deux burgers, il a encore _______ !", "options": ["faim", "stylo", "verre", "chaise"], "correct": 0, "explanation": "'Avoir encore faim' — всё ещё хотеть есть, даже после еды.", "translation": "Даже после двух бургеров он всё ещё голоден!"}, {"question": "Tu veux un verre d’eau ? – Non, je n’ai pas _______.", "options": ["soif", "deux", "envie", "doute"], "correct": 0, "explanation": "'Ne pas avoir soif' — не хотеть пить.", "translation": "Ты хочешь воды? – Нет, я не хочу пить."}, {"question": "On va dîner ? – Oui, j’ai trop _______ !", "options": ["faim", "froid", "mal", "soif"], "correct": 0, "explanation": "'Trop faim' — разговорное усиление: очень голоден.", "translation": "Пойдём ужинать? – Да, я ужасно голоден!"}, {"question": "Il boit trois bouteilles ! Il a une _______ incroyable !", "options": ["soif", "lampe", "pantalon", "carton"], "correct": 0, "explanation": "'Une soif incroyable' — очень хочется пить.", "translation": "Он выпивает три бутылки! У него невероятная жажда!"}, {"question": "Les enfants ont joué dehors et maintenant ils ont très _______.", "options": ["soif", "lumière", "ballon", "brosse"], "correct": 0, "explanation": "После игр дети хотят пить — 'ils ont très soif'.", "translation": "Дети играли на улице и теперь очень хотят пить."}];
+
+    const explanations = {"soif": "✔ Правильный ответ. Выражение «avoir soif» означает «хотеть пить». Употребляется в самых разных ситуациях, когда человек испытывает жажду.", "faim": "✔ Правильный ответ. Выражение «avoir faim» означает «хотеть есть», стандартная форма, употребляется во всех регистрах речи.", "froid": "✖ Не подходит. «Avoir froid» означает «мне холодно», не связано с голодом или жаждой.", "sommeil": "✖ Не подходит. «Avoir sommeil» означает «хочется спать», а не пить или есть.", "chaud": "✖ «Avoir chaud» — «мне жарко», не передаёт чувство голода.", "mal": "✖ «Avoir mal» — «мне больно»; это выражение используется с указанием части тела: «j’ai mal à la tête».", "peur": "✖ «Avoir peur» — «бояться». Не связано с приёмом пищи.", "envie": "✖ Часто требует дополнения: «avoir envie de…» — «хотеть что-то». Недостаточно конкретно без дополнения.", "souri": "✖ Это глагол прошедшего времени от «sourire» (улыбаться), не может быть частью устойчивого выражения с «avoir».", "tristesse": "✖ «La tristesse» — существительное «грусть», не используется с «avoir» без контекста.", "colère": "✖ «La colère» — «злость». Выражение «être en colère», но не «avoir colère».", "poche": "✖ «Une poche» — «карман». Не относится к чувствам или физическим состояниям.", "chance": "✖ «Avoir de la chance» — «повезло», но это не о жажде.", "tête": "✖ «Tête» — «голова». Без контекста не передаёт нужного смысла.", "tort": "✖ «Avoir tort» — «быть неправым». Не о голоде или жажде.", "deux": "✖ «Deux» — число два. Бессмысленно в этом контексте.", "doute": "✖ «Le doute» — «сомнение». Не подходит по смыслу.", "joie": "✖ «La joie» — «радость». Не выражает физического чувства жажды.", "stylo": "✖ «Un stylo» — «ручка». Бессмысленно в этом контексте.", "verre": "✖ Хотя «un verre» — это «стакан», само по себе слово не передаёт состояния жажды.", "chaise": "✖ «Une chaise» — «стул». Не выражает чувства.", "lampe": "✖ «Lampe» — «лампа». Не выражает желания или физического состояния.", "jupe": "✖ «Jupe» — «юбка». Не по смыслу.", "bouteille": "✖ Хотя это может содержать воду, выражение «avoir bouteille» не существует.", "lumière": "✖ «Lumière» — «свет». Не имеет отношения к чувству голода/жажды.", "ballon": "✖ «Ballon» — «мяч». Неуместно.", "carton": "✖ «Carton» — «коробка». Не передаёт смысла жажды.", "pantalon": "✖ «Pantalon» — «штаны». Не имеет логической связи.", "brosse": "✖ «Brosse» — «щётка». Не относится к состоянию жажды или голода."};
+let current = 0;
+    let answers = Array(questions.length).fill(null);
+    const quizDiv = document.getElementById("quiz");
+    const progressBar = document.getElementById("progressBar");
+
+    function speak(text) {
+      if (document.getElementById("audioToggle").checked) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fr-FR';
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      quizDiv.innerHTML = `<div class="question">${q.question}</div>
+      <div class="options">
+        ${q.options.map((opt, idx) => {
+          const tooltip = idx === q.correct ? 'Bonne réponse' : 'Ce n’est pas correct';
+          return `<button onclick="selectAnswer(${idx})" title="${tooltip}">${opt}</button>`;
+        }).join('')}
+      </div>`;
+      progressBar.style.width = `${(current / questions.length) * 100}%`;
+      speak(q.question);
+    }
+
+    function selectAnswer(index) {
+      const q = questions[current];
+      answers[current] = index;
+      const buttons = document.querySelectorAll(".options button");
+      buttons.forEach((btn, idx) => {
+        if (idx === q.correct) btn.classList.add("correct");
+        else if (idx === index) btn.classList.add("wrong");
+        btn.disabled = true;
+      });
+      const explanation = document.createElement("div");
+      explanation.className = "explanation";
+      explanation.innerHTML = `
+        <strong>Объяснение:</strong> ${q.explanation}<br />
+        <strong>Перевод:</strong> ${q.translation}
+      `;
+      quizDiv.appendChild(explanation);
+    }
+
+    function previousQuestion() {
+      if (current > 0) {
+        current--;
+        renderQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (current < questions.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      const score = answers.filter((a, i) => a === questions[i].correct).length;
+      quizDiv.innerHTML = `<div class="question">Ваш результат: ${score} / ${questions.length}
+      (${Math.round((score / questions.length) * 100)}%)</div>
+      <button onclick="restartQuiz()">Пройти ещё раз</button>`;
+      progressBar.style.width = `100%`;
+    }
+
+    function restartQuiz() {
+      current = 0;
+      answers = Array(questions.length).fill(null);
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
